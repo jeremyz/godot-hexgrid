@@ -1,13 +1,16 @@
 extends Sprite
 
 signal configure(center, texture_size)
-signal touched(msg)
+signal hex_touched(pos, hex, key)
 
 const MAPH : String = "res://assets/map-h.png"
 const MAPV : String = "res://assets/map-v.png"
 const BLOCK : String = "res://assets/block.png"
 const BLACK : String = "res://assets/black.png"
 const GREEN : String = "res://assets/green.png"
+const TREE : String = "res://assets/tree.png"
+const CITY : String = "res://assets/city.png"
+const MOUNT : String = "res://assets/mountain.png"
 
 var drag : Sprite
 
@@ -35,7 +38,7 @@ func get_tile(coords : Vector2, k : int) -> Tile:
 	if hexes.has(k): return hexes[k]
 	var hex : Hex = Hex.new()
 	hex.rotation_degrees = hex_rotation
-	hex.configure(board.center_of(coords), coords, [BLOCK, GREEN, BLACK])
+	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT])
 	hexes[k] = hex
 	$Hexes.add_child(hex)
 	return hex
@@ -77,7 +80,7 @@ func on_mouse_1(pressed : bool) -> void:
 	var pos : Vector2 = get_local_mouse_position()
 	var coords : Vector2 = board.to_map(pos)
 	if pressed:
-		notify(pos, coords)
+		notify(board.get_tile(coords), pos, coords)
 		if drag == null:
 			prev = coords
 			if board.to_map($Tank.position) == coords:
@@ -99,19 +102,14 @@ func on_mouse_2(pressed : bool) -> void:
 	var pos : Vector2 = get_local_mouse_position()
 	var coords : Vector2 = board.to_map(pos)
 	if pressed:
-		notify(pos, coords)
 		var hex : Hex = board.get_tile(coords)
-		if not hex.is_blocked(): hex.block(true)
-		else: hex.block(false)
+		hex.change()
+		notify(hex, pos, coords)
 		update_los()
 
-func notify(pos : Vector2, coords : Vector2) -> void:
-	if board.is_on_map(coords):
-		var center : Vector2 = board.center_of(coords)
-		var key : int = board.key(coords)
-		emit_signal("touched","%s\n -> %s\n -> %s\n -> %d" % [pos, coords, center, key])
-	else:
-		emit_signal("touched", "off board")
+func notify(hex : Hex, pos : Vector2, coords : Vector2) -> void:
+	if board.is_on_map(coords): emit_signal("hex_touched",pos, hex, board.key(coords))
+	else: emit_signal("hex_touched", pos, hex, -1)
 
 func update_los() -> void:
 	for hex in los:

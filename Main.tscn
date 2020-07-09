@@ -22,9 +22,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="UI"]
+[node name="Info" type="Label" parent="UI"]
 margin_left = 2.0
-margin_top = 477.0
+margin_top = 501.0
 margin_right = 131.0
 margin_bottom = 598.0
 __meta__ = {

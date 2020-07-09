@@ -10,12 +10,12 @@ onready var Camera : Camera2D = $ViewportContainer/Viewport/Camera
 func _ready():
 	UI.get_node("rotate").connect("pressed", Map, "on_rotate")
 	Map.connect("configure", Camera, "on_configure")
-	Map.connect("touched", self, "on_touched")
+	Map.connect("hex_touched", self, "on_hex_touched")
 	Camera.window = $ViewportContainer/Viewport.size
 	Map.on_rotate()
 
-func on_touched(s : String) -> void:
-	UI.get_node("Label").set_text(s)
+func on_hex_touched(pos : Vector2, hex : Hex, key : int) -> void:
+	UI.get_node("Info").set_text("\n(%d;%d)\n -> %s\n -> %d" % [int(pos.x), int(pos.y), hex.inspect(), key])
 
 func _unhandled_input(event : InputEvent) -> void:
 	if event is InputEventMouseMotion:
