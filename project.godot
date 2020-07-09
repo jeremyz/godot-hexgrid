@@ -1,0 +1,37 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Tile",
+"class": "Hex",
+"language": "GDScript",
+"path": "res://Hex.gd"
+}, {
+"base": "Node",
+"class": "HexBoard",
+"language": "GDScript",
+"path": "res://HexBoard.gd"
+}, {
+"base": "Node2D",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://Tile.gd"
+} ]
+_global_script_class_icons={
+"Hex": "res://godot/Tile.png",
+"HexBoard": "res://godot/HexBoard.png",
+"Tile": "res://godot/Tile.png"
+}
+
+[application]
+
+config/name="hexgrid_demo"
+run/main_scene="res://Main.tscn"
+config/icon="res://icon.png"

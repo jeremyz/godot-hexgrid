@@ -1,0 +1,4 @@
+[gd_scene format=2]
+
+[node name="Map" type="Sprite"]
+centered = false

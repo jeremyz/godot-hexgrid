@@ -1,0 +1,68 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Camera.gd" type="Script" id=1]
+[ext_resource path="res://Map.gd" type="Script" id=2]
+[ext_resource path="res://Main.gd" type="Script" id=3]
+[ext_resource path="res://Los.gd" type="Script" id=4]
+[ext_resource path="res://assets/target.png" type="Texture" id=6]
+[ext_resource path="res://assets/tank.png" type="Texture" id=7]
+
+[node name="Main" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="rotate" type="Button" parent="UI"]
+margin_left = 19.0
+margin_top = 17.0
+margin_right = 101.0
+margin_bottom = 56.0
+text = "Rotate"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="UI"]
+margin_left = 2.0
+margin_top = 477.0
+margin_right = 131.0
+margin_bottom = 598.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
+margin_left = 141.0
+margin_top = 19.0
+margin_right = 1004.0
+margin_bottom = 581.0
+mouse_filter = 2
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+size = Vector2( 863, 562 )
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="Map" type="Sprite" parent="ViewportContainer/Viewport"]
+script = ExtResource( 2 )
+
+[node name="Hexes" type="Node" parent="ViewportContainer/Viewport/Map"]
+
+[node name="Target" type="Sprite" parent="ViewportContainer/Viewport/Map"]
+z_index = 1
+texture = ExtResource( 6 )
+
+[node name="Tank" type="Sprite" parent="ViewportContainer/Viewport/Map"]
+z_index = 1
+texture = ExtResource( 7 )
+
+[node name="Los" type="Node2D" parent="ViewportContainer/Viewport/Map"]
+script = ExtResource( 4 )
+
+[node name="Camera" type="Camera2D" parent="ViewportContainer/Viewport"]
+current = true
+script = ExtResource( 1 )
