@@ -21,6 +21,7 @@ var tl : int		# num of hexes in 2 consecutives rows
 
 var tile_factory_fct : FuncRef
 var angles : Dictionary
+var adjacents : Array
 
 func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bool) -> void:
 	v = vertical
@@ -89,6 +90,22 @@ func _key(x : int, y : int) -> int:
 	if (y % 2) != 0:
 		i += (int(cr.x) - 1)
 	return i
+
+func adjacents(coords : Vector2) -> Array:
+	adjacents.clear()
+	coords.x += 1
+	adjacents.append(get_tile(coords))
+	coords.y += 1
+	adjacents.append(get_tile(coords))
+	coords.x -= 1
+	adjacents.append(get_tile(coords))
+	coords.x -= 1
+	adjacents.append(get_tile(coords))
+	coords.y -= 2
+	adjacents.append(get_tile(coords))
+	coords.x += 1
+	adjacents.append(get_tile(coords))
+	return adjacents
 
 func is_on_map(coords : Vector2) -> bool:
 	if v: return _is_on_map(int(coords.x), int(coords.y))

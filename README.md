@@ -10,7 +10,7 @@ base map made with [gimp](https://www.gimp.org) and my plugin [hexmap](https://g
 ## features
 
     - [x] Distance
-    - [ ] Adjacents
+    - [x] Adjacents
     - [x] Line Of Sight
     - [ ] Reachable Tiles ::: BFS
     - [ ] Shortest Path ::: A*
