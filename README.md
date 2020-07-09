@@ -19,4 +19,4 @@ base map made with [gimp](https://www.gimp.org) and my plugin [hexmap](https://g
 
 ## screenshots
 
-![Line Of Sight - Move](data/los.png)
+![Line Of Sight - Move](data/los.gif)
