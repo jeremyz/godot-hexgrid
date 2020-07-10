@@ -5,6 +5,8 @@ class_name HexBoard, "res://godot/HexBoard.png"
 
 enum Orientation { E=1, NE=2, N=4, NW=8, W=16, SW=32, S=64, SE=128 }
 
+const IMAX : int = 9999999999
+
 var bt : Vector2	# bottom corner
 var cr : Vector2	# column, row
 
@@ -43,20 +45,21 @@ func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bo
 	tl = (2 * int(cr.x) - 1)
 	search_count = 0
 	angles = {}
+	# origin [top-left] East is at 0°, degrees grow clockwise
 	if v:
 		angles[Orientation.E] = 0
-		angles[Orientation.NE] = 60
-		angles[Orientation.NW] = 120
+		angles[Orientation.SE] = 60
+		angles[Orientation.SW] = 120
 		angles[Orientation.W] = 180
-		angles[Orientation.SW] = 240
-		angles[Orientation.SE] = 300
+		angles[Orientation.NW] = 240
+		angles[Orientation.NE] = 300
 	else:
-		angles[Orientation.NE] = 30
-		angles[Orientation.N] = 90
-		angles[Orientation.NW] = 150
-		angles[Orientation.SW] = 210
-		angles[Orientation.S] = 270
-		angles[Orientation.SE] = 330
+		angles[Orientation.NE] = 210
+		angles[Orientation.N] = 270
+		angles[Orientation.NW] = 330
+		angles[Orientation.SW] = 30
+		angles[Orientation.S] = 90
+		angles[Orientation.SE] = 150
 
 func size() -> int:
 	return int(cr.y) / 2 * tl + int(cr.y) % 2 * int(cr.x)
@@ -237,8 +240,9 @@ func line_of_sight(p0 : Vector2, p1 : Vector2, tiles : Array) -> Vector2:
 		var q : Vector2 = Vector2(x, y)
 		var t : Tile = get_tile(q)
 		if los_blocked and not contact:
-			var o : int = to_orientation(angle(tiles[tiles.size() - 1], t))
-			ret = compute_contact(from.position, to.position, o, t.position, true)
+			var prev : Tile = tiles[tiles.size() - 1]
+			var o : int = to_orientation(angle(prev, t))
+			ret = compute_contact(from.position, to.position, o, prev.position, true)
 			contact = true
 		tiles.append(t)
 		t.blocked = los_blocked
@@ -319,20 +323,20 @@ func compute_orientation(dx :int, dy :int, flat : bool) -> int:
 func compute_contact(from : Vector2, to : Vector2, o : int, t : Vector2, line : bool) -> Vector2:
 	var dx : float = to.x - from.x
 	var dy : float = to.y - from.y
-	var n : float = 9999999999.0 if dx == 0 else (dy / dx)
+	var n : float = float(IMAX) if dx == 0 else (dy / dx)
 	var c : float = from.y - (n * from.x)
 	if v:
 		if o == Orientation.N: return Vector2(t.x, t.y - s)
 		elif o == Orientation.S: return Vector2(t.x, t.y + s)
 		elif o == Orientation.E:
-			var x : float = t.x - dw
+			var x : float = t.x + dw
 			return Vector2(x, from.y + n * (x - from.x))
 		elif o == Orientation.W:
-			var x : float = t.x + dw
+			var x : float = t.x - dw
 			return Vector2(x, from.y + n * (x - from.x))
 		else:
 			if line:
-				var p : float = m if (o == Orientation.SE or o == Orientation.NW) else -m
+				var p : float = -m if (o == Orientation.SE or o == Orientation.NW) else m
 				var k : float = t.y - p * t.x
 				if o == Orientation.SE || o == Orientation.SW: k += s
 				else: k -= s
@@ -381,11 +385,11 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 		build_adjacents(src.coords)
 		for dst in adjacents:
 			if not dst.on_board: continue
-			var a : int = angle(src, dst)
-			var cost : int = piece.move_cost(src, dst, a)
+			var o : int = to_orientation(angle(src, dst))
+			var cost : int = piece.move_cost(src, dst, o)
 			if (cost == -1): continue # impracticable
 			var r : int = src.acc - cost
-			var rm : bool = src.road_march and src.has_road(a)
+			var rm : bool = src.road_march and src.has_road(o)
 			# not enough MP even with RM, maybe first move allowed
 			if ((r + (road_march_bonus if rm else 0)) < 0 and not (src == from and piece.at_least_one_tile())): continue
 			if dst.search_count != search_count:
@@ -395,7 +399,7 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 				dst.road_march = rm
 				stack.push_back(dst)
 				tiles.append(dst)
-			elif (r > dst.acc or (rm and (r + road_march_bonus > dst.acc + (road_march_bonus if dst.roadMarch else 0)))):
+			elif (r > dst.acc or (rm and (r + road_march_bonus > dst.acc + (road_march_bonus if dst.road_march else 0)))):
 				dst.acc = r
 				dst.parent = src
 				dst.road_march = rm
