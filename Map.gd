@@ -24,6 +24,8 @@ var p1 : Vector2
 var los : Array
 var move : Array
 var unit : Unit
+var show_los : bool
+var show_move : bool
 
 func _ready():
 	board = HexBoard.new()
@@ -46,6 +48,10 @@ func get_tile(coords : Vector2, k : int) -> Tile:
 	hexes[k] = hex
 	$Hexes.add_child(hex)
 	return hex
+
+func config(l : bool, m : bool) -> void:
+	show_los = l
+	show_move = m
 
 func on_rotate() -> void:
 	texture = load(MAPH if board.v else MAPV)
@@ -74,7 +80,7 @@ func on_rotate() -> void:
 		$Hexes.remove_child(hex)
 		hex.queue_free()
 	reset()
-	update_los()
+	update()
 
 func on_mouse_move() -> void:
 	if drag != null:
@@ -97,7 +103,7 @@ func on_mouse_1(pressed : bool) -> void:
 				drag.position = board.center_of(coords)
 				if drag == $Tank: p0 = coords
 				else: p1 = coords
-				update_los()
+				update()
 			else:
 				drag.position = board.center_of(prev)
 		drag = null
@@ -109,18 +115,22 @@ func on_mouse_2(pressed : bool) -> void:
 		var hex : Hex = board.get_tile(coords)
 		hex.change()
 		notify(hex, pos, coords)
-		update_los()
+		update()
 
 func notify(hex : Hex, pos : Vector2, coords : Vector2) -> void:
 	if board.is_on_map(coords): emit_signal("hex_touched",pos, hex, board.key(coords))
 	else: emit_signal("hex_touched", pos, hex, -1)
 
-func update_los() -> void:
+func update() -> void:
+	$Los.visible = false
 	for hex in los: hex.show_los(false)
-	var ct : Vector2 = board.line_of_sight(p0, p1, los)
-	$Los.setup($Tank.position, $Target.position, ct)
-	for hex in los: hex.show_los(true)
+	if show_los:
+		$Los.visible = true
+		var ct : Vector2 = board.line_of_sight(p0, p1, los)
+		$Los.setup($Tank.position, $Target.position, ct)
+		for hex in los: hex.show_los(true)
 	for hex in move: hex.show_move(false)
-	# warning-ignore:return_value_discarded
-	board.possible_moves(unit, board.get_tile(p0), move)
-	for hex in move: hex.show_move(true)
+	if show_move:
+		# warning-ignore:return_value_discarded
+		board.possible_moves(unit, board.get_tile(p0), move)
+		for hex in move: hex.show_move(true)

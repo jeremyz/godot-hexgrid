@@ -9,10 +9,17 @@ onready var Camera : Camera2D = $ViewportContainer/Viewport/Camera
 
 func _ready():
 	UI.get_node("rotate").connect("pressed", Map, "on_rotate")
+	UI.get_node("LOS").connect("pressed", self, "on_toggle")
+	UI.get_node("Move").connect("pressed", self, "on_toggle")
 	Map.connect("configure", Camera, "on_configure")
 	Map.connect("hex_touched", self, "on_hex_touched")
 	Camera.window = $ViewportContainer/Viewport.size
+	on_toggle()
 	Map.on_rotate()
+
+func on_toggle() -> void:
+	Map.config(UI.get_node("LOS").pressed, UI.get_node("Move").pressed)
+	Map.update()
 
 func on_hex_touched(pos : Vector2, hex : Hex, key : int) -> void:
 	UI.get_node("Info").set_text("\n(%d;%d)\n -> %s\n -> %d" % [int(pos.x), int(pos.y), hex.inspect(), key])

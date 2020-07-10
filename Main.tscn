@@ -31,6 +31,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="LOS" type="CheckBox" parent="UI"]
+margin_left = 30.0
+margin_top = 90.0
+margin_right = 83.0
+margin_bottom = 114.0
+pressed = true
+text = "LOS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Move" type="CheckBox" parent="UI"]
+margin_left = 30.0
+margin_top = 140.0
+margin_right = 93.0
+margin_bottom = 164.0
+text = "Move"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ViewportContainer" type="ViewportContainer" parent="."]
 margin_left = 141.0
 margin_top = 19.0
