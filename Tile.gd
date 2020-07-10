@@ -24,7 +24,7 @@ func configure(p : Vector2, c: Vector2, o :Array) -> void:
 	visible = false
 
 func has_road(a) -> bool:
-	# FIXME
+	print("Tile#has_road() must be overriden in a subclass")
 	return false
 
 func block_los(from : Tile, to : Tile, d : float, dt : float) -> bool:

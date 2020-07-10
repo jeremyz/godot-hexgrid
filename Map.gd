@@ -43,11 +43,23 @@ func reset() -> void:
 func get_tile(coords : Vector2, k : int) -> Tile:
 	if hexes.has(k): return hexes[k]
 	var hex : Hex = Hex.new()
+	hex.roads = get_road(k)
 	hex.rotation_degrees = hex_rotation
-	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT, MOVE])
+	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT, BLOCK, MOVE])
 	hexes[k] = hex
 	$Hexes.add_child(hex)
 	return hex
+
+func get_road(k : int) -> int:
+	if not board.v: return 0
+	var v : int = 0
+	v += (HexBoard.Orientation.E if k in [19,20,21,23,24,42,43,44,45,46,47] else 0)
+	v += (HexBoard.Orientation.W if k in [19,20,21,22,24,25,43,44,45,46,47] else 0)
+	v += (HexBoard.Orientation.SE if k in [22,32,42,52,62] else 0)
+	v += (HexBoard.Orientation.NW if k in [32,42,52,62] else 0)
+	v += (HexBoard.Orientation.NE if k in [7,16,25,32] else 0)
+	v += (HexBoard.Orientation.SW if k in [7,16,23] else 0)
+	return v
 
 func config(l : bool, m : bool) -> void:
 	show_los = l

@@ -4,6 +4,7 @@ extends Tile
 class_name Hex, "res://godot/Tile.png"
 
 var type : int = -1
+var roads : int = 0
 
 func _ready() -> void:
 	type = -1
@@ -13,15 +14,20 @@ func inspect() -> String:
 	if type == 0: s = 'city'
 	elif type == 1: s = 'wood'
 	elif type == 2: s = 'mountain'
-	return "%s e:%d h:%d c:%d\n -> [%d;%d]\n -> (%d;%d)" % [s, elevation(), height(), cost(), coords.x, coords.y, position.x, position.y]
+	elif type == 3: s = 'impracticable'
+	return "%s e:%d h:%d c:%d r:%d\n -> [%d;%d]\n -> (%d;%d)" % [s, elevation(), height(), cost(), roads, coords.x, coords.y, position.x, position.y]
+
+func has_road(o : int) -> bool:
+	return (o & roads) > 0
 
 func change() -> void:
-	type = (type + 2) % 4 - 1
-	for i in range(3):
+	type = (type + 2) % 5 - 1
+	for i in range(4):
 		enable_overlay(i + 2, i == type)
 
 func cost() -> int:
 	if type == -1: return 1
+	elif type == 3: return -1
 	return type + 1
 
 func height() -> int:
@@ -51,5 +57,5 @@ func show_los(b) -> void:
 		enable_overlay(1, false)
 
 func show_move(b) -> void:
-	if 5 < get_child_count():
-		enable_overlay(5, b)
+	if 6 < get_child_count():
+		enable_overlay(6, b)

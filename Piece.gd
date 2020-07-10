@@ -13,7 +13,7 @@ func road_march_bonus() -> int:
 
 func move_cost(src : Tile, dst : Tile, a : int) -> int:
 	print("Piece#move_cost() must be overriden in a subclass")
-	return 1
+	return -1 # impracticable
 
 func at_least_one_tile() -> bool:
 	print("Piece#at_least_one_tile() must be overriden in a subclass")
