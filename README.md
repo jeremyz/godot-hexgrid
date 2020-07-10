@@ -11,8 +11,8 @@ base map made with [gimp](https://www.gimp.org) and my plugin [hexmap](https://g
 
     - [x] Distance
     - [x] Adjacents
-    - [x] Line Of Sight
-    - [ ] Reachable Tiles ::: BFS
+    - [x] 3D Line Of Sight
+    - [x] Reachable Tiles ::: BFS
     - [ ] Shortest Path ::: A*
     - [ ] Range Of Influence (LOS - Fire Power)
     - [ ] Battle lines (Kruskal + farthest apart units are the flank units)

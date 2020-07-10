@@ -7,6 +7,7 @@ const MAPH : String = "res://assets/map-h.png"
 const MAPV : String = "res://assets/map-v.png"
 const BLOCK : String = "res://assets/block.png"
 const BLACK : String = "res://assets/black.png"
+const MOVE : String = "res://assets/move.png"
 const GREEN : String = "res://assets/green.png"
 const TREE : String = "res://assets/tree.png"
 const CITY : String = "res://assets/city.png"
@@ -21,6 +22,8 @@ var hex_rotation : int
 var p0 : Vector2
 var p1 : Vector2
 var los : Array
+var move : Array
+var unit : Unit
 
 func _ready():
 	board = HexBoard.new()
@@ -29,6 +32,7 @@ func _ready():
 	drag = null
 	hexes = {}
 	los = []
+	unit = Unit.new()
 
 func reset() -> void:
 	hexes.clear()
@@ -38,7 +42,7 @@ func get_tile(coords : Vector2, k : int) -> Tile:
 	if hexes.has(k): return hexes[k]
 	var hex : Hex = Hex.new()
 	hex.rotation_degrees = hex_rotation
-	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT])
+	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT, MOVE])
 	hexes[k] = hex
 	$Hexes.add_child(hex)
 	return hex
@@ -112,9 +116,11 @@ func notify(hex : Hex, pos : Vector2, coords : Vector2) -> void:
 	else: emit_signal("hex_touched", pos, hex, -1)
 
 func update_los() -> void:
-	for hex in los:
-		hex.show_los(false)
+	for hex in los: hex.show_los(false)
 	var ct : Vector2 = board.line_of_sight(p0, p1, los)
 	$Los.setup($Tank.position, $Target.position, ct)
-	for hex in los:
-		hex.show_los(true)
+	for hex in los: hex.show_los(true)
+	for hex in move: hex.show_move(false)
+	# warning-ignore:return_value_discarded
+	board.possible_moves(unit, board.get_tile(p0), move)
+	for hex in move: hex.show_move(true)

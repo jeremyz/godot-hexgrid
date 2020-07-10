@@ -7,6 +7,11 @@ var coords : Vector2
 var blocked : bool
 var on_board : bool = false
 
+var acc : int
+var parent : Tile
+var road_march : bool
+var search_count : int
+
 func configure(p : Vector2, c: Vector2, o :Array) -> void:
 	position = p
 	coords = c
@@ -18,13 +23,17 @@ func configure(p : Vector2, c: Vector2, o :Array) -> void:
 		add_child(s)
 	visible = false
 
+func has_road(a) -> bool:
+	# FIXME
+	return false
+
 func block_los(from : Tile, to : Tile, d : float, dt : float) -> bool:
+	print("Tile#block_los() must be overriden in a subclass")
 	return false
 
 func enable_overlay(i :int, v : bool) -> void:
 	get_child(i).visible = v
-	if v:
-		visible = true
+	if v: visible = true
 	else :
 		visible = false
 		for o in get_children():

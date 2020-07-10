@@ -22,6 +22,8 @@ var tl : int		# num of hexes in 2 consecutives rows
 var tile_factory_fct : FuncRef
 var angles : Dictionary
 var adjacents : Array
+var search_count : int
+var stack : Array
 
 func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bool) -> void:
 	v = vertical
@@ -39,6 +41,7 @@ func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bo
 		bt = v0
 		cr = Vector2(rows, cols)
 	tl = (2 * int(cr.x) - 1)
+	search_count = 0
 	angles = {}
 	if v:
 		angles[Orientation.E] = 0
@@ -360,3 +363,41 @@ func compute_contact(from : Vector2, to : Vector2, o : int, t : Vector2, line : 
 				var x : float = t.x + (dh if (o == Orientation.NW || o == Orientation.SW) else -dh)
 				var y : float = t.y + (dw if (o == Orientation.SE || o == Orientation.SW) else -dw)
 				return Vector2(x, y)
+
+func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
+	tiles.clear()
+	search_count += 1
+	from.acc = piece.get_mp()
+	from.parent = null
+	from.search_count = search_count
+	if from.acc <= 0 or not is_on_map(from.coords): return 0
+	var road_march_bonus : int = piece.road_march_bonus()
+	from.road_march = road_march_bonus > 0
+	stack.push_back(from)
+	while(not stack.empty()):
+		var src : Tile = stack.pop_back()
+		if (src.acc + (road_march_bonus if src.road_march else 0)) <= 0: continue
+		# warning-ignore:return_value_discarded
+		build_adjacents(src.coords)
+		for dst in adjacents:
+			if not dst.on_board: continue
+			var a : int = angle(src, dst)
+			var cost : int = piece.move_cost(src, dst, a)
+			if (cost == -1): continue # impracticable
+			var r : int = src.acc - cost
+			var rm : bool = src.road_march and src.has_road(a)
+			# not enough MP even with RM, maybe first move allowed
+			if ((r + (road_march_bonus if rm else 0)) < 0 and not (src == from and piece.at_least_one_tile())): continue
+			if dst.search_count != search_count:
+				dst.search_count = search_count
+				dst.acc = r
+				dst.parent = src
+				dst.road_march = rm
+				stack.push_back(dst)
+				tiles.append(dst)
+			elif (r > dst.acc or (rm and (r + road_march_bonus > dst.acc + (road_march_bonus if dst.roadMarch else 0)))):
+				dst.acc = r
+				dst.parent = src
+				dst.road_march = rm
+				stack.push_back(dst)
+	return tiles.size()
