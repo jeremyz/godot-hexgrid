@@ -91,7 +91,7 @@ func _key(x : int, y : int) -> int:
 		i += (int(cr.x) - 1)
 	return i
 
-func adjacents(coords : Vector2) -> Array:
+func build_adjacents(coords : Vector2) -> Array:
 	adjacents.clear()
 	coords.x += 1
 	adjacents.append(get_tile(coords))
@@ -100,8 +100,9 @@ func adjacents(coords : Vector2) -> Array:
 	coords.x -= 1
 	adjacents.append(get_tile(coords))
 	coords.x -= 1
+	coords.y -= 1
 	adjacents.append(get_tile(coords))
-	coords.y -= 2
+	coords.y -= 1
 	adjacents.append(get_tile(coords))
 	coords.x += 1
 	adjacents.append(get_tile(coords))
@@ -349,7 +350,6 @@ func compute_contact(from : Vector2, to : Vector2, o : int, t : Vector2, line : 
 			return Vector2(from.x + (y - from.y) / n, y)
 		else:
 			if line:
-#				o = 1
 				var p : float = im if (o == Orientation.SE or o == Orientation.NW) else -im
 				var k : float = 0
 				if o == Orientation.SW or o == Orientation.NW: k = t.y - (p * (t.x + s))
