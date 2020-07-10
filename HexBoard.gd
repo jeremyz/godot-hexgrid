@@ -405,3 +405,55 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 				dst.road_march = rm
 				stack.push_back(dst)
 	return tiles.size()
+
+func shortest_path(piece : Piece, from : Tile,  to : Tile, tiles : Array) -> int:
+	tiles.clear()
+	search_count += 1
+	from.acc = 0
+	from.parent = null
+	from.search_count = search_count
+	if from == to or not is_on_map(from.coords) or not is_on_map(to.coords): return tiles.size()
+	var road_march_bonus : int = piece.road_march_bonus()
+	from.road_march = road_march_bonus > 0
+	stack.push_back(from)
+	while(not stack.empty()):
+		var src : Tile = stack.pop_back()
+		if (src == to): break
+		# warning-ignore:return_value_discarded
+		build_adjacents(src.coords)
+		for dst in adjacents:
+			if not dst.on_board: continue
+			var o : int = to_orientation(angle(src, dst))
+			var cost : int = piece.move_cost(src, dst, o)
+			if (cost == -1): continue # impracticable
+			cost += src.acc
+			var total : float  = cost + distance(dst.coords, to.coords)
+			var rm : bool = src.road_march and src.has_road(o)
+			if rm: total -= road_march_bonus
+			var add : bool = false
+			if dst.search_count != search_count:
+				dst.search_count = search_count
+				add = true
+			elif dst.f > total or (rm and not dst.road_march and abs(dst.f - total) < 0.001):
+				stack.erase(dst)
+				add = true
+			if add:
+				dst.acc = cost
+				dst.f = total
+				dst.road_march = rm
+				dst.parent = src
+				var idx : int = IMAX
+				for k in range(stack.size()):
+					if stack[k].f <= dst.f:
+						idx = k
+						break
+				if idx == IMAX: stack.push_back(dst)
+				else: stack.insert(idx, dst)
+	stack.clear()
+	if to.search_count == search_count:
+		var t : Tile = to
+		while t != from:
+			tiles.push_front(t)
+			t = t.parent
+		tiles.push_front(from)
+	return tiles.size()

@@ -59,3 +59,7 @@ func show_los(b) -> void:
 func show_move(b) -> void:
 	if 6 < get_child_count():
 		enable_overlay(6, b)
+
+func show_short(b) -> void:
+	if 7 < get_child_count():
+		enable_overlay(7, b)

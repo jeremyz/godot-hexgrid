@@ -8,6 +8,7 @@ var blocked : bool
 var on_board : bool = false
 
 var acc : int
+var f : float
 var parent : Tile
 var road_march : bool
 var search_count : int

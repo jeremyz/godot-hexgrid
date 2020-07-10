@@ -8,6 +8,7 @@ const MAPV : String = "res://assets/map-v.png"
 const BLOCK : String = "res://assets/block.png"
 const BLACK : String = "res://assets/black.png"
 const MOVE : String = "res://assets/move.png"
+const SHORT : String = "res://assets/short.png"
 const GREEN : String = "res://assets/green.png"
 const TREE : String = "res://assets/tree.png"
 const CITY : String = "res://assets/city.png"
@@ -23,6 +24,7 @@ var p0 : Vector2
 var p1 : Vector2
 var los : Array
 var move : Array
+var short : Array
 var unit : Unit
 var show_los : bool
 var show_move : bool
@@ -45,7 +47,7 @@ func get_tile(coords : Vector2, k : int) -> Tile:
 	var hex : Hex = Hex.new()
 	hex.roads = get_road(k)
 	hex.rotation_degrees = hex_rotation
-	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT, BLOCK, MOVE])
+	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT, BLOCK, MOVE, SHORT])
 	hexes[k] = hex
 	$Hexes.add_child(hex)
 	return hex
@@ -142,7 +144,11 @@ func update() -> void:
 		$Los.setup($Tank.position, $Target.position, ct)
 		for hex in los: hex.show_los(true)
 	for hex in move: hex.show_move(false)
+	for hex in short: hex.show_short(false)
 	if show_move:
 		# warning-ignore:return_value_discarded
 		board.possible_moves(unit, board.get_tile(p0), move)
+		# warning-ignore:return_value_discarded
+		board.shortest_path(unit, board.get_tile(p0), board.get_tile(p1), short)
 		for hex in move: hex.show_move(true)
+		for i in range(1, short.size() -1): short[i].show_short(true)
