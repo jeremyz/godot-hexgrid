@@ -19,4 +19,5 @@ base map made with [gimp](https://www.gimp.org) and my plugin [hexmap](https://g
 
 ## screenshots
 
-![Line Of Sight - Move](data/los.gif)
+![Line Of Sight](data/los.gif)
+![Possible Move - Shortest Path](data/move.gif)
