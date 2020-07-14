@@ -1,11 +1,11 @@
 # godot-hexgrid
 
-is a [godot](https://godotengine.org/) based framework to build classical hex boardgames.
+is a [godot](https://godotengine.org/) based framework to build hex map boardgames.
 
 code is based on [gdx-boardgame](https://github.com/jeremyz/gdx-boardgame),
 which is based on [rustanddust](https://github.com/jeremyz/rustanddust).
 
-base map made with [gimp](https://www.gimp.org) and my plugin [hexmap](https://github.com/jeremyz/hexmap)
+test maps made with [hexmap](https://github.com/jeremyz/hexmap) a [gimp](https://www.gimp.org) plugin.
 
 ## features
 
