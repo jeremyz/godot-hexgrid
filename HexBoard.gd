@@ -45,8 +45,8 @@ func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bo
 	tl = (2 * int(cr.x) - 1)
 	search_count = 0
 	angles = {}
-	# origin [top-left] East is at 0°, degrees grow clockwise
 	if v:
+		# origin [top-left] East is at 0°, degrees grows clockwise
 		angles[Orientation.E] = 0
 		angles[Orientation.SE] = 60
 		angles[Orientation.SW] = 120
@@ -54,12 +54,12 @@ func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bo
 		angles[Orientation.NW] = 240
 		angles[Orientation.NE] = 300
 	else:
-		angles[Orientation.NE] = 210
-		angles[Orientation.N] = 270
-		angles[Orientation.NW] = 330
-		angles[Orientation.SW] = 30
+		angles[Orientation.SE] = 30
 		angles[Orientation.S] = 90
-		angles[Orientation.SE] = 150
+		angles[Orientation.SW] = 150
+		angles[Orientation.NW] = 210
+		angles[Orientation.N] = 270
+		angles[Orientation.NE] = 330
 
 func size() -> int:
 	return int(cr.y) / 2 * tl + int(cr.y) % 2 * int(cr.x)
@@ -242,7 +242,7 @@ func line_of_sight(p0 : Vector2, p1 : Vector2, tiles : Array) -> Vector2:
 		if los_blocked and not contact:
 			var prev : Tile = tiles[tiles.size() - 1]
 			var o : int = to_orientation(angle(prev, t))
-			ret = compute_contact(from.position, to.position, o, prev.position, true)
+			ret = compute_contact(from.position, to.position, prev.position, o, true)
 			contact = true
 		tiles.append(t)
 		t.blocked = los_blocked
@@ -302,25 +302,25 @@ func diagonal_los(p0 : Vector2, p1 : Vector2, flat : bool, q13 : bool, tiles : A
 		if t.blocked and not contact:
 			var o : int = compute_orientation(dx, dy, flat)
 			if not los_blocked and blocked == 0x03:
-				ret = compute_contact(from.position, to.position, o, t.position, false)
+				ret = compute_contact(from.position, to.position, t.position, opposite(o), false)
 			else:
-				ret = compute_contact(from.position, to.position, opposite(o), tiles[tiles.size() - idx].position, false)
+				ret = compute_contact(from.position, to.position, tiles[tiles.size() - idx].position, o, false)
 			contact = true;
 		los_blocked = t.blocked || t.block_los(from, to, d, distance(p0, q))
 	return ret
 
 func compute_orientation(dx :int, dy :int, flat : bool) -> int:
 	if flat:
-		if v: return Orientation.N if dy == 1 else Orientation.S
-		else: return Orientation.NE if dy == 1 else Orientation.SW
+		if v: return Orientation.S if dy == 1 else Orientation.N
+		else: return Orientation.S if dx == 1 else Orientation.N
 	if dx == 1:
-		if dy == 1: return Orientation.NE if v else Orientation.E
-		else: return Orientation.SE
+		if dy == 1: return Orientation.E
+		else: return Orientation.E if v else Orientation.N
 	else:
-		if dy == 1: return Orientation.NW
-		else: return Orientation.SW if v else Orientation.W
+		if dy == 1: return Orientation.W if v else Orientation.S
+		else: return Orientation.W
 
-func compute_contact(from : Vector2, to : Vector2, o : int, t : Vector2, line : bool) -> Vector2:
+func compute_contact(from : Vector2, to : Vector2, t : Vector2, o : int, line : bool) -> Vector2:
 	var dx : float = to.x - from.x
 	var dy : float = to.y - from.y
 	var n : float = float(IMAX) if dx == 0 else (dy / dx)
@@ -335,20 +335,15 @@ func compute_contact(from : Vector2, to : Vector2, o : int, t : Vector2, line : 
 			var x : float = t.x - dw
 			return Vector2(x, from.y + n * (x - from.x))
 		else:
-			if line:
-				var p : float = -m if (o == Orientation.SE or o == Orientation.NW) else m
-				var k : float = t.y - p * t.x
-				if o == Orientation.SE || o == Orientation.SW: k += s
-				else: k -= s
-				var x : float = (k - c) / (n - p)
-				return Vector2(x, n * x + c)
-			else:
-				var x : float = t.x + (-dw if (o == Orientation.NE or o == Orientation.SE) else dw)
-				var y : float = t.y + (dh if (o == Orientation.SE or o == Orientation.SW) else -dh)
-				return Vector2(x, y)
+			var p : float = -m if (o == Orientation.SE or o == Orientation.NW) else m
+			var k : float = t.y - p * t.x
+			if o == Orientation.SE || o == Orientation.SW: k += s
+			else: k -= s
+			var x : float = (k - c) / (n - p)
+			return Vector2(x, n * x + c)
 	else:
-		if o == Orientation.E: return Vector2(t.x - s, t.y)
-		elif o == Orientation.W: return Vector2(t.x + s, t.y)
+		if o == Orientation.E: return Vector2(t.x + s, t.y)
+		elif o == Orientation.W: return Vector2(t.x - s, t.y)
 		elif o == Orientation.N:
 			var y : float = t.y - dw
 			return Vector2(from.x + (y - from.y) / n, y)
@@ -356,17 +351,12 @@ func compute_contact(from : Vector2, to : Vector2, o : int, t : Vector2, line : 
 			var y : float = t.y + dw
 			return Vector2(from.x + (y - from.y) / n, y)
 		else:
-			if line:
-				var p : float = im if (o == Orientation.SE or o == Orientation.NW) else -im
-				var k : float = 0
-				if o == Orientation.SW or o == Orientation.NW: k = t.y - (p * (t.x + s))
-				else: k = t.y - (p * (t.x - s))
-				var x : float = (k - c) / (n - p)
-				return Vector2(x, n * x + c);
-			else:
-				var x : float = t.x + (dh if (o == Orientation.NW || o == Orientation.SW) else -dh)
-				var y : float = t.y + (dw if (o == Orientation.SE || o == Orientation.SW) else -dw)
-				return Vector2(x, y)
+			var p : float = -im if (o == Orientation.SE or o == Orientation.NW) else +im
+			var k : float = 0
+			if o == Orientation.SW or o == Orientation.NW: k = t.y - (p * (t.x - s))
+			else: k = t.y - (p * (t.x + s))
+			var x : float = (k - c) / (n - p)
+			return Vector2(x, n * x + c);
 
 func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 	tiles.clear()
