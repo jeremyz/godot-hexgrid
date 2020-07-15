@@ -242,7 +242,7 @@ func line_of_sight(p0 : Vector2, p1 : Vector2, tiles : Array) -> Vector2:
 		if los_blocked and not contact:
 			var prev : Tile = tiles[tiles.size() - 1]
 			var o : int = to_orientation(angle(prev, t))
-			ret = compute_contact(from.position, to.position, prev.position, o, true)
+			ret = compute_contact(from.position, to.position, prev.position, o)
 			contact = true
 		tiles.append(t)
 		t.blocked = los_blocked
@@ -302,9 +302,9 @@ func diagonal_los(p0 : Vector2, p1 : Vector2, flat : bool, q13 : bool, tiles : A
 		if t.blocked and not contact:
 			var o : int = compute_orientation(dx, dy, flat)
 			if not los_blocked and blocked == 0x03:
-				ret = compute_contact(from.position, to.position, t.position, opposite(o), false)
+				ret = compute_contact(from.position, to.position, t.position, opposite(o))
 			else:
-				ret = compute_contact(from.position, to.position, tiles[tiles.size() - idx].position, o, false)
+				ret = compute_contact(from.position, to.position, tiles[tiles.size() - idx].position, o)
 			contact = true;
 		los_blocked = t.blocked || t.block_los(from, to, d, distance(p0, q))
 	return ret
@@ -320,7 +320,7 @@ func compute_orientation(dx :int, dy :int, flat : bool) -> int:
 		if dy == 1: return Orientation.W if v else Orientation.S
 		else: return Orientation.W
 
-func compute_contact(from : Vector2, to : Vector2, t : Vector2, o : int, line : bool) -> Vector2:
+func compute_contact(from : Vector2, to : Vector2, t : Vector2, o : int) -> Vector2:
 	var dx : float = to.x - from.x
 	var dy : float = to.y - from.y
 	var n : float = float(IMAX) if dx == 0 else (dy / dx)
