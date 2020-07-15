@@ -21,6 +21,7 @@ func on_viewport_resized() -> void:
 
 func on_rotate() -> void:
 	Map.rotate_map()
+	on_viewport_resized()
 
 func on_toggle() -> void:
 	Map.set_mode(UI.get_node("LOS").pressed, UI.get_node("Move").pressed)
