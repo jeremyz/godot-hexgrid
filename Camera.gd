@@ -13,7 +13,8 @@ func configure(w : Vector2, c : Vector2, ts : Vector2) -> void:
 	window = w
 	map_center = c
 	texture_size = ts
-	zoom_boundaries = Vector2(1.0, max((texture_size.x + margin.x) / window.x, (texture_size.y + margin.y) / window.y))
+	var zout : float = max((texture_size.x + margin.x) / window.x, (texture_size.y + margin.y) / window.y)
+	zoom_boundaries = Vector2(zout - 0.5, zout)
 	update_camera(0, 0, zoom_boundaries.y)
 
 func update_camera(x : float, y : float, z : float) -> void:
