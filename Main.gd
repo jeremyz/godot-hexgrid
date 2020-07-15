@@ -17,7 +17,9 @@ func _ready():
 	Map.connect("hex_touched", self, "on_hex_touched")
 	$CanvasLayer/HBOX/ViewportContainer.connect("resized", self, "on_viewport_resized")
 	on_toggle()
+	yield(get_tree().create_timer(.2), 'timeout')
 	on_viewport_resized()
+	UI.get_node("OSInfo").text = "screen\n%s\ndpi %d" % [OS.get_screen_size(), OS.get_screen_dpi()]
 
 func on_viewport_resized() -> void:
 	Camera.configure($CanvasLayer/HBOX/ViewportContainer/Viewport.size, Map.center(), Map.texture_size())
