@@ -8,18 +8,22 @@ onready var Map : Sprite = $ViewportContainer/Viewport/Map
 onready var Camera : Camera2D = $ViewportContainer/Viewport/Camera
 
 func _ready():
-	UI.get_node("rotate").connect("pressed", Map, "on_rotate")
+	UI.get_node("rotate").connect("pressed", self, "on_rotate")
 	UI.get_node("LOS").connect("pressed", self, "on_toggle")
 	UI.get_node("Move").connect("pressed", self, "on_toggle")
-	Map.connect("configure", Camera, "on_configure")
 	Map.connect("hex_touched", self, "on_hex_touched")
-	Camera.window = $ViewportContainer/Viewport.size
+	$ViewportContainer.connect("resized", self, "on_viewport_resized")
 	on_toggle()
-	Map.on_rotate()
+	on_viewport_resized()
+
+func on_viewport_resized() -> void:
+	Camera.configure($ViewportContainer/Viewport.size, Map.center(), Map.texture_size())
+
+func on_rotate() -> void:
+	Map.rotate_map()
 
 func on_toggle() -> void:
 	Map.set_mode(UI.get_node("LOS").pressed, UI.get_node("Move").pressed)
-	Map.update()
 
 func on_hex_touched(pos : Vector2, hex : Hex, key : int) -> void:
 	var s : String = ("offmap" if key == -1 else hex.inspect())

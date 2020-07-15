@@ -8,9 +8,9 @@ var zoom_boundaries : Vector2
 
 func _ready():
 	margin = Vector2(0, 0)
-	#window = set within Main
 
-func on_configure(c : Vector2, ts : Vector2) -> void:
+func configure(w : Vector2, c : Vector2, ts : Vector2) -> void:
+	window = w
 	map_center = c
 	texture_size = ts
 	zoom_boundaries = Vector2(1.0, max((texture_size.x + margin.x) / window.x, (texture_size.y + margin.y) / window.y))

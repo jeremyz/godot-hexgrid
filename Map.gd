@@ -1,6 +1,5 @@
 extends Sprite
 
-signal configure(center, texture_size)
 signal hex_touched(pos, hex, key)
 
 const MAPH : String = "res://assets/map-h.png"
@@ -30,11 +29,12 @@ var show_los : bool
 var show_move : bool
 
 func _ready():
+	drag = null
+	unit = Unit.new()
 	board = HexBoard.new()
 	board.tile_factory_fct = funcref(self, "get_tile")
 	board.v = false
-	unit = Unit.new()
-	drag = null
+	rotate_map()
 
 func reset() -> void:
 	los.clear()
@@ -49,6 +49,12 @@ func reset() -> void:
 	for hex in $Hexes.get_children():
 		$Hexes.remove_child(hex)
 		hex.queue_free()
+	compute()
+
+func rotate_map() -> void:
+	texture = load(MAPH if board.v else MAPV)
+	configure()
+	reset()
 
 func set_mode(l : bool, m : bool) -> void:
 	show_los = l
@@ -56,29 +62,26 @@ func set_mode(l : bool, m : bool) -> void:
 	compute()
 
 func configure() -> void:
-	var ts : Vector2 = texture.get_size()
 	var v0 : Vector2 = Vector2(50, 100)
-	var c = ts / 2
 	if centered:
+		var ts : Vector2 = texture.get_size()
 		if board.v:	
 			v0.x -= ts.y / 2
 			v0.y -= ts.x / 2
 		else:
 			v0 -= ts / 2
-		c = Vector2(0, 0)
 	if board.v:
 		hex_rotation = 30
 		board.configure(10, 4, 100, v0, false)
 	else:
 		hex_rotation = 0
 		board.configure(10, 7, 100, v0, true)
-	emit_signal("configure", c, ts)
-	reset()
-	compute()
 
-func on_rotate() -> void:
-	texture = load(MAPH if board.v else MAPV)
-	configure()
+func texture_size() -> Vector2:
+	return texture.get_size()
+
+func center() -> Vector2:
+	return Vector2(0, 0) if centered else texture.get_size() / 2
 
 func on_mouse_move() -> void:
 	if drag != null:
