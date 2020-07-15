@@ -14,8 +14,8 @@ func inspect() -> String:
 	if type == 0: s = 'city'
 	elif type == 1: s = 'wood'
 	elif type == 2: s = 'mountain'
-	elif type == 3: s = 'impracticable'
-	return "%s e:%d h:%d c:%d r:%d\n -> [%d;%d]\n -> (%d;%d)" % [s, elevation(), height(), cost(), roads, coords.x, coords.y, position.x, position.y]
+	elif type == 3: s = 'blocked'
+	return "[%d;%d]\n -> (%d;%d)\n -> %s\ne:%d h:%d c:%d r:%d" % [coords.x, coords.y, position.x, position.y, s, elevation(), height(), cost(), roads]
 
 func has_road(o : int) -> bool:
 	return (o & roads) > 0

@@ -87,7 +87,7 @@ func on_mouse_move() -> void:
 	if drag != null:
 		drag.position = get_local_mouse_position()
 
-func on_click(pressed : bool) -> void:
+func on_click(pressed : bool) -> bool:
 	var pos : Vector2 = get_local_mouse_position()
 	var coords : Vector2 = board.to_map(pos)
 	if pressed:
@@ -97,6 +97,8 @@ func on_click(pressed : bool) -> void:
 			drag = $Tank
 		elif board.to_map($Target.position) == coords:
 			drag = $Target
+		else:
+			return true
 	else:
 		if drag:
 			if board.is_on_map(coords):
@@ -111,6 +113,7 @@ func on_click(pressed : bool) -> void:
 		else:
 			if coords == prev and board.is_on_map(coords):
 				change_tile(coords, pos)
+	return false
 
 func change_tile(coords : Vector2, pos : Vector2) -> void:
 	var hex : Hex = board.get_tile(coords)
