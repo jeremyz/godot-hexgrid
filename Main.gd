@@ -3,21 +3,21 @@ extends Node2D
 
 var drag_map : bool = false
 
-onready var UI : CanvasLayer = $UI
-onready var Map : Sprite = $ViewportContainer/Viewport/Map
-onready var Camera : Camera2D = $ViewportContainer/Viewport/Camera
+onready var UI : Control = $CanvasLayer/HBOX/UI
+onready var Map : Sprite = $CanvasLayer/HBOX/ViewportContainer/Viewport/Map
+onready var Camera : Camera2D = $CanvasLayer/HBOX/ViewportContainer/Viewport/Camera
 
 func _ready():
 	UI.get_node("rotate").connect("pressed", self, "on_rotate")
 	UI.get_node("LOS").connect("pressed", self, "on_toggle")
 	UI.get_node("Move").connect("pressed", self, "on_toggle")
 	Map.connect("hex_touched", self, "on_hex_touched")
-	$ViewportContainer.connect("resized", self, "on_viewport_resized")
+	$CanvasLayer/HBOX/ViewportContainer.connect("resized", self, "on_viewport_resized")
 	on_toggle()
 	on_viewport_resized()
 
 func on_viewport_resized() -> void:
-	Camera.configure($ViewportContainer/Viewport.size, Map.center(), Map.texture_size())
+	Camera.configure($CanvasLayer/HBOX/ViewportContainer/Viewport.size, Map.center(), Map.texture_size())
 
 func on_rotate() -> void:
 	Map.rotate_map()
