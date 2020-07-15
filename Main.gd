@@ -18,11 +18,12 @@ func _ready():
 	Map.on_rotate()
 
 func on_toggle() -> void:
-	Map.config(UI.get_node("LOS").pressed, UI.get_node("Move").pressed)
+	Map.set_mode(UI.get_node("LOS").pressed, UI.get_node("Move").pressed)
 	Map.update()
 
 func on_hex_touched(pos : Vector2, hex : Hex, key : int) -> void:
-	UI.get_node("Info").set_text("\n(%d;%d)\n -> %s\n -> %d" % [int(pos.x), int(pos.y), hex.inspect(), key])
+	var s : String = ("offmap" if key == -1 else hex.inspect())
+	UI.get_node("Info").set_text("\n(%d;%d)\n -> %s\n -> %d" % [int(pos.x), int(pos.y), s, key])
 
 func _unhandled_input(event : InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -39,9 +40,7 @@ func _unhandled_input(event : InputEvent) -> void:
 		elif event.button_index == 3:
 			drag_map = event.pressed
 		elif event.button_index == 1:
-			Map.on_mouse_1(event.pressed)
-		elif event.button_index == 2:
-			Map.on_mouse_2(event.pressed)
+			Map.on_click(event.pressed)
 	elif event is InputEventKey:
 		if event.scancode == KEY_ESCAPE:
 			get_tree().quit()

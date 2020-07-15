@@ -33,14 +33,87 @@ func _ready():
 	board = HexBoard.new()
 	board.tile_factory_fct = funcref(self, "get_tile")
 	board.v = false
-	drag = null
-	hexes = {}
-	los = []
 	unit = Unit.new()
+	drag = null
 
 func reset() -> void:
+	los.clear()
+	move.clear()
+	short.clear()
 	hexes.clear()
 	hexes[-1] = Hex.new()	# off map
+	p0 = Vector2(0, 0)
+	p1 = Vector2(3, 3)
+	$Tank.position = board.center_of(p0)
+	$Target.position = board.center_of(p1)
+	for hex in $Hexes.get_children():
+		$Hexes.remove_child(hex)
+		hex.queue_free()
+
+func set_mode(l : bool, m : bool) -> void:
+	show_los = l
+	show_move = m
+	compute()
+
+func configure() -> void:
+	var ts : Vector2 = texture.get_size()
+	var v0 : Vector2 = Vector2(50, 100)
+	var c = ts / 2
+	if centered:
+		if board.v:	
+			v0.x -= ts.y / 2
+			v0.y -= ts.x / 2
+		else:
+			v0 -= ts / 2
+		c = Vector2(0, 0)
+	if board.v:
+		hex_rotation = 30
+		board.configure(10, 4, 100, v0, false)
+	else:
+		hex_rotation = 0
+		board.configure(10, 7, 100, v0, true)
+	emit_signal("configure", c, ts)
+	reset()
+	compute()
+
+func on_rotate() -> void:
+	texture = load(MAPH if board.v else MAPV)
+	configure()
+
+func on_mouse_move() -> void:
+	if drag != null:
+		drag.position = get_local_mouse_position()
+
+func on_click(pressed : bool) -> void:
+	var pos : Vector2 = get_local_mouse_position()
+	var coords : Vector2 = board.to_map(pos)
+	if pressed:
+		notify(pos, coords)
+		prev = coords
+		if board.to_map($Tank.position) == coords:
+			drag = $Tank
+		elif board.to_map($Target.position) == coords:
+			drag = $Target
+	else:
+		if drag:
+			if board.is_on_map(coords):
+				drag.position = board.center_of(coords)
+				if drag == $Tank: p0 = coords
+				else: p1 = coords
+				notify(pos, coords)
+				compute()
+			else:
+				drag.position = board.center_of(prev)
+			drag = null
+		else:
+			if coords == prev and board.is_on_map(coords):
+				change_tile(coords, pos)
+
+func change_tile(coords : Vector2, pos : Vector2) -> void:
+	var hex : Hex = board.get_tile(coords)
+	hex.change()
+	notify(pos, coords)
+	compute()
 
 func get_tile(coords : Vector2, k : int) -> Tile:
 	if hexes.has(k): return hexes[k]
@@ -63,79 +136,10 @@ func get_road(k : int) -> int:
 	v += (HexBoard.Orientation.SW if k in [7,16,23] else 0)
 	return v
 
-func config(l : bool, m : bool) -> void:
-	show_los = l
-	show_move = m
+func notify(pos : Vector2, coords : Vector2) -> void:
+	emit_signal("hex_touched", pos, board.get_tile(coords), (board.key(coords) if board.is_on_map(coords) else -1))
 
-func on_rotate() -> void:
-	texture = load(MAPH if board.v else MAPV)
-	var ts : Vector2 = texture.get_size()
-	var v0 : Vector2 = Vector2(50, 100)
-	var c = ts / 2
-	if centered:
-		if board.v:	
-			v0.x -= ts.y / 2
-			v0.y -= ts.x / 2
-		else:
-			v0 -= ts / 2
-		c = Vector2(0, 0)
-	if board.v:
-		hex_rotation = 30
-		board.configure(10, 4, 100, v0, false)
-	else:
-		hex_rotation = 0
-		board.configure(10, 7, 100, v0, true)
-	emit_signal("configure", c, ts)
-	p0 = Vector2(0, 0)
-	p1 = Vector2(3, 3)
-	$Tank.position = board.center_of(p0)
-	$Target.position = board.center_of(p1)
-	for hex in $Hexes.get_children():
-		$Hexes.remove_child(hex)
-		hex.queue_free()
-	reset()
-	update()
-
-func on_mouse_move() -> void:
-	if drag != null:
-		drag.position = get_local_mouse_position()
-
-func on_mouse_1(pressed : bool) -> void:
-	var pos : Vector2 = get_local_mouse_position()
-	var coords : Vector2 = board.to_map(pos)
-	if pressed:
-		notify(board.get_tile(coords), pos, coords)
-		if drag == null:
-			prev = coords
-			if board.to_map($Tank.position) == coords:
-				drag = $Tank
-			elif board.to_map($Target.position) == coords:
-				drag = $Target
-	else:
-		if drag:
-			if board.is_on_map(coords):
-				drag.position = board.center_of(coords)
-				if drag == $Tank: p0 = coords
-				else: p1 = coords
-				update()
-			else:
-				drag.position = board.center_of(prev)
-		drag = null
-
-func on_mouse_2(pressed : bool) -> void:
-	var pos : Vector2 = get_local_mouse_position()
-	var coords : Vector2 = board.to_map(pos)
-	if pressed:
-		var hex : Hex = board.get_tile(coords)
-		hex.change()
-		notify(hex, pos, coords)
-		update()
-
-func notify(hex : Hex, pos : Vector2, coords : Vector2) -> void:
-	if board.is_on_map(coords): emit_signal("hex_touched",pos, hex, board.key(coords))
-	else: emit_signal("hex_touched", pos, hex, -1)
-
-func update() -> void:
+func compute() -> void:
 	$Los.visible = false
 	for hex in los: hex.show_los(false)
 	if show_los:
