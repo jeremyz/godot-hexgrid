@@ -37,7 +37,19 @@ func height() -> int:
 	return 0
 
 func elevation() -> int:
-	if type == 2: return 2
+	if type == 2: return 3
+	return 0
+
+func range_modifier(category : int) -> int:
+	return (1 if type == 2 else 0)
+
+func attack_modifier(category : int, orientation : int) -> int:
+	return (2 if type == 1 else 0)
+
+func defense_value(category : int, orientation : int) -> int:
+	if type == 0: return 2
+	elif type == 1: return 1
+	elif type == 2: return 1
 	return 0
 
 func block_los(from : Tile, to : Tile, d : float, dt : float) -> bool:

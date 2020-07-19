@@ -92,6 +92,36 @@ func opposite(o : int) -> int:
 	if o <= Orientation.NW: return o << 4
 	return o >> 4
 
+# return the Orientation given to distant Tiles
+# Orientation is combined in case of diagonals
+func distant_orientation(from : Tile, to : Tile) -> int:
+	var a : float = rad2deg((to.position - from.position).angle())
+	if a < 0: a += 360
+	a = int(a * 10) / 10.0
+	for k in angles.keys():
+		var z : int = angles[k]
+		if a >= (z + 30 - DEGREE_ADJ) and a <= (z + 30 + DEGREE_ADJ):
+			# diagonal
+			var p : int = k >> 1
+			if p == 0: p = Orientation.SE
+			if not angles.has(p): return k | p >> 1 # v : N S and not v : W E
+			else: return (k | p)
+		elif (z == 30 and (a < DEGREE_ADJ or a > 360 - DEGREE_ADJ)):
+			return Orientation.NE | Orientation.SE
+		elif a >= (z - 30) and a <= (z + 30):
+			return k
+	if angles.has(Orientation.E) and a > 330 and a <= 360:
+		return Orientation.E
+	return -1
+
+# return the opposite of a possibly combined given Orientation
+func distant_opposite(o : int) -> int:
+	var r : int = 0
+	for k in angles.keys():
+		if (k & o) == k:
+			r |= opposite(k)
+	return r
+
 # return the key of a given col;row coordinate
 func key(coords : Vector2) -> int:
 	if not is_on_map(coords): return -1
@@ -467,4 +497,29 @@ func shortest_path(piece : Piece, from : Tile,  to : Tile, tiles : Array) -> int
 			tiles.push_front(t)
 			t = t.parent
 		tiles.push_front(from)
+	return tiles.size()
+
+func range_of_influence(piece : Piece, from : Tile, category : int, tiles : Array) -> int:
+	tiles.clear()
+	var max_range : int = piece.max_range_of_fire(category, from)
+	if not is_on_map(from.coords): return 0
+	var tmp : Array = []
+	search_count += 1
+	from.search_count = search_count
+	stack.push_back(from)
+	while(not stack.empty()):
+		var src : Tile = stack.pop_back()
+		# warning-ignore:return_value_discarded
+		build_adjacents(src.coords)
+		for dst in adjacents:
+			if not dst.on_board: continue
+			if dst.search_count == search_count: continue
+			dst.search_count = search_count
+			var d : int = int(distance(from.coords, dst.coords, false))
+			if d > max_range: continue
+			if line_of_sight(from.coords, dst.coords, tmp).x != -1: continue
+			var o : int = distant_orientation(from, dst)
+			dst.f = piece.volume_of_fire(category, d, from, o, dst, distant_opposite(o))
+			stack.push_back(dst)
+			tiles.append(dst)
 	return tiles.size()

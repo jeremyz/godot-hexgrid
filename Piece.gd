@@ -22,3 +22,14 @@ func move_cost(src : Tile, dst : Tile, orientation : int) -> int:
 func at_least_one_tile(dst : Tile) -> bool:
 	print("Piece#at_least_one_tile() must be overriden in a subclass")
 	return true
+
+# the maximum range of fire with a given category of weapon
+func max_range_of_fire(category : int, from : Tile) -> int:
+	print("Piece#max_range_of_fire() must be overriden in a subclass")
+	return 0
+
+# the projected volume of fire with a given category of weapon at a given distance,
+# out of a given Tile with a given orientation, into a given Tile with a given orientation
+func volume_of_fire(category : int, distance : int, src : Tile, src_o : int, dst : Tile, dst_o : int) -> int:
+	print("Piece#volume_of_fire() must be overriden in a subclass")
+	return -1 # out of range
