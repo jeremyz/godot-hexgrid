@@ -129,18 +129,27 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Info" type="Label" parent="CanvasLayer/HBOX/UI"]
+[node name="Influence" type="CheckBox" parent="CanvasLayer/HBOX/UI"]
 margin_top = 538.0
 margin_right = 250.0
-margin_bottom = 574.0
+margin_bottom = 582.0
+text = "Influence"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Info" type="Label" parent="CanvasLayer/HBOX/UI"]
+margin_top = 612.0
+margin_right = 250.0
+margin_bottom = 648.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="OSInfo" type="Label" parent="CanvasLayer/HBOX/UI"]
-margin_top = 604.0
+margin_top = 678.0
 margin_right = 250.0
-margin_bottom = 640.0
+margin_bottom = 714.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

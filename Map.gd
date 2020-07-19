@@ -8,6 +8,7 @@ const BLOCK : String = "res://assets/block.png"
 const BLACK : String = "res://assets/black.png"
 const MOVE : String = "res://assets/move.png"
 const SHORT : String = "res://assets/short.png"
+const RED : String = "res://assets/red.png"
 const GREEN : String = "res://assets/green.png"
 const TREE : String = "res://assets/tree.png"
 const CITY : String = "res://assets/city.png"
@@ -24,9 +25,11 @@ var p1 : Vector2
 var los : Array
 var move : Array
 var short : Array
+var influence : Array
 var unit : Unit
 var show_los : bool
 var show_move : bool
+var show_influence : bool
 
 func _ready():
 	drag = null
@@ -40,6 +43,7 @@ func reset() -> void:
 	los.clear()
 	move.clear()
 	short.clear()
+	influence.clear()
 	hexes.clear()
 	hexes[-1] = Hex.new()	# off map
 	p0 = Vector2(0, 0)
@@ -56,9 +60,10 @@ func rotate_map() -> void:
 	configure()
 	reset()
 
-func set_mode(l : bool, m : bool) -> void:
+func set_mode(l : bool, m : bool, i : bool) -> void:
 	show_los = l
 	show_move = m
+	show_influence = i
 	compute()
 
 func configure() -> void:
@@ -126,7 +131,7 @@ func get_tile(coords : Vector2, k : int) -> Tile:
 	var hex : Hex = Hex.new()
 	hex.roads = get_road(k)
 	hex.rotation_degrees = hex_rotation
-	hex.configure(board.center_of(coords), coords, [GREEN, BLACK, CITY, TREE, MOUNT, BLOCK, MOVE, SHORT])
+	hex.configure(board.center_of(coords), coords, [RED, GREEN, BLACK, CITY, TREE, MOUNT, BLOCK, MOVE, SHORT])
 	hexes[k] = hex
 	$Hexes.add_child(hex)
 	return hex
@@ -162,3 +167,8 @@ func compute() -> void:
 		board.shortest_path(unit, board.get_tile(p0), board.get_tile(p1), short)
 		for hex in move: hex.show_move(true)
 		for i in range(1, short.size() -1): short[i].show_short(true)
+	for hex in influence: hex.show_influence(false)
+	if show_influence:
+		# warning-ignore:return_value_discarded
+		board.range_of_influence(unit, board.get_tile(p0), 0, influence)
+		for hex in influence: hex.show_influence(true)

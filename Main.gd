@@ -14,6 +14,7 @@ func _ready():
 	UI.get_node("zout").connect("pressed", self, "on_zoom", [false])
 	UI.get_node("LOS").connect("pressed", self, "on_toggle")
 	UI.get_node("Move").connect("pressed", self, "on_toggle")
+	UI.get_node("Influence").connect("pressed", self, "on_toggle")
 	Map.connect("hex_touched", self, "on_hex_touched")
 	$CanvasLayer/HBOX/ViewportContainer.connect("resized", self, "on_viewport_resized")
 	on_toggle()
@@ -32,7 +33,7 @@ func on_zoom(b : bool) -> void:
 	Camera.update_camera(0, 0, -0.05 if b else 0.05)
 
 func on_toggle() -> void:
-	Map.set_mode(UI.get_node("LOS").pressed, UI.get_node("Move").pressed)
+	Map.set_mode(UI.get_node("LOS").pressed, UI.get_node("Move").pressed, UI.get_node("Influence").pressed)
 
 func on_hex_touched(pos : Vector2, hex : Hex, key : int) -> void:
 	var s : String = ("offmap" if key == -1 else hex.inspect())

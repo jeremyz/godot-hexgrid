@@ -23,7 +23,7 @@ func has_road(o : int) -> bool:
 func change() -> void:
 	type = (type + 2) % 5 - 1
 	for i in range(4):
-		enable_overlay(i + 2, i == type)
+		enable_overlay(i + 3, i == type)
 
 func cost() -> int:
 	if type == -1: return 1
@@ -63,15 +63,18 @@ func block_los(from : Tile, to : Tile, d : float, dt : float) -> bool:
 	return ((h * d / dt) >= to.elevation() - e)
 
 func show_los(b) -> void:
-	if b: enable_overlay((1 if blocked else 0), true)
+	if b: enable_overlay((2 if blocked else 1), true)
 	else:
-		enable_overlay(0, false)
 		enable_overlay(1, false)
+		enable_overlay(2, false)
 
 func show_move(b) -> void:
-	if 6 < get_child_count():
-		enable_overlay(6, b)
+	enable_overlay(7, b)
 
 func show_short(b) -> void:
-	if 7 < get_child_count():
-		enable_overlay(7, b)
+	enable_overlay(8, b)
+
+func show_influence(b) -> void:
+	var s : Sprite = get_child(0)
+	s.modulate = Color(f/10.0, 0, 0)
+	enable_overlay(0, b)
