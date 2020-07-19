@@ -184,11 +184,13 @@ func distance(p0 : Vector2, p1 : Vector2, euclidean : bool = true) -> float:
 		var fdy : float = dy * 0.86602
 		return sqrt((fdx * fdx) + (fdy * fdy))
 	else:
-		var dz : float = abs((p0.x - p0.y) - (p1.x - p1.y))
+		dx = int(abs(dx))
+		dy = int(abs(dy))
+		var dz : float = abs(p1.x - p0.x - p1.y + p0.y)
 		if dx > dy:
-			if dx > dz : return abs(dx)
+			if dx > dz: return float(dx)
 		else:
-			if dy > dz: return abs(dy)
+			if dy > dz: return float(dy)
 		return dz
 
 # http://zvold.blogspot.com/2010/01/bresenhams-line-drawing-algorithm-on_26.html
