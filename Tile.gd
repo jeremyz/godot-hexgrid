@@ -24,10 +24,13 @@ func configure(p : Vector2, c: Vector2, o :Array) -> void:
 		add_child(s)
 	visible = false
 
-func has_road(a) -> bool:
+# is there a road with given orientation that drives out of that Tile
+func has_road(orientation : int) -> bool:
 	print("Tile#has_road() must be overriden in a subclass")
 	return false
 
+# is the line of sight blocked from a Tile to another, d beeing the distance between from and to,
+# dt beeing the distance between from and this Tile
 func block_los(from : Tile, to : Tile, d : float, dt : float) -> bool:
 	print("Tile#block_los() must be overriden in a subclass")
 	return false

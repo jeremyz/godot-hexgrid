@@ -6,6 +6,7 @@ class_name HexBoard, "res://godot/HexBoard.png"
 enum Orientation { E=1, NE=2, N=4, NW=8, W=16, SW=32, S=64, SE=128 }
 
 const IMAX : int = 9999999999
+const DEGREE_ADJ : int = 2
 
 var bt : Vector2	# bottom corner
 var cr : Vector2	# column, row
@@ -61,30 +62,37 @@ func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bo
 		angles[Orientation.N] = 270
 		angles[Orientation.NE] = 330
 
+# the number of Tile
 func size() -> int:
 	return int(cr.y) / 2 * tl + int(cr.y) % 2 * int(cr.x)
 
+# fetch a Tile given it's col;row coordinates
 func get_tile(coords : Vector2) -> Tile:
 	return tile_factory_fct.call_func(coords, key(coords))
 
-func to_angle(o : int) -> int:
+# Orientation to degrees
+func to_degrees(o : int) -> int:
 	return angles.get(o, -1)
 
+# convert the given angle between 2 adjacent Tiles into an Orientation
 func to_orientation(a : float) -> int:
 	for k in angles.keys():
 		if angles[k] == a:
 			return k
 	return -1
 
+# compute the angle between 2 adjacent Tiles
 func angle(from : Tile, to : Tile) -> int:
-	var a : float = rad2deg((to.position - from.position).angle()) + 2
+	var a : float = rad2deg((to.position - from.position).angle()) + DEGREE_ADJ
 	if a < 0: a += 360
 	return int(a / 10) * 10
 
+# return the opposite of a given Orientation
 func opposite(o : int) -> int:
 	if o <= Orientation.NW: return o << 4
 	return o >> 4
 
+# return the key of a given col;row coordinate
 func key(coords : Vector2) -> int:
 	if not is_on_map(coords): return -1
 	if v: return _key(int(coords.x), int(coords.y))
@@ -97,6 +105,7 @@ func _key(x : int, y : int) -> int:
 		i += (int(cr.x) - 1)
 	return i
 
+# build the 6 adjacent Tiles of a Tile given by it's col;row coordinates
 func build_adjacents(coords : Vector2) -> Array:
 	adjacents.clear()
 	coords.x += 1
@@ -114,6 +123,7 @@ func build_adjacents(coords : Vector2) -> Array:
 	adjacents.append(get_tile(coords))
 	return adjacents
 
+# return true if the Tile is on the map
 func is_on_map(coords : Vector2) -> bool:
 	if v: return _is_on_map(int(coords.x), int(coords.y))
 	else: return _is_on_map(int(coords.y), int(coords.x))
@@ -123,10 +133,12 @@ func _is_on_map(x : int, y : int) -> bool:
 	if (x < ((y + 1) / 2)) || (x >= (int(cr.x) + (y / 2))): return false
 	return true
 
+# compute the center of a Tile given by it's col;row coordinates
 func center_of(coords : Vector2) -> Vector2:
 	if v: return Vector2(bt.x + dw + (coords.x * w) - (coords.y * dw), bt.y + dh + (coords.y * h))
 	else: return Vector2(bt.y + dh + (coords.x * h), bt.x + dw + (coords.y * w) - (coords.x * dw))
 
+# compute the col;row coordinates of a Tile given it's real coordinates
 func to_map(r : Vector2) -> Vector2:
 	if v: return _to_map(r.x, r.y, false)
 	else: return _to_map(r.y, r.x, true)
@@ -161,6 +173,7 @@ func _to_map(x : float, y : float, swap : bool) -> Vector2:
 	if swap: return Vector2(row, col)
 	else: return Vector2(col, row)
 
+# compute the distance between 2 Tiles given by their col;row coordinates
 func distance(p0 : Vector2, p1 : Vector2, euclidean : bool = true) -> float:
 	var dx : int = int(p1.x - p0.x)
 	var dy : int = int(p1.y - p0.y)
@@ -180,6 +193,8 @@ func distance(p0 : Vector2, p1 : Vector2, euclidean : bool = true) -> float:
 
 # http://zvold.blogspot.com/2010/01/bresenhams-line-drawing-algorithm-on_26.html
 # http://zvold.blogspot.com/2010/02/line-of-sight-on-hexagonal-grid.html
+# compute as an Array, the line of sight between 2 Tiles given by their col;row coordinates
+# return the point after which the line of sight is blocked
 func line_of_sight(p0 : Vector2, p1 : Vector2, tiles : Array) -> Vector2:
 	tiles.clear()
 	# orthogonal projection
@@ -201,7 +216,7 @@ func line_of_sight(p0 : Vector2, p1 : Vector2, tiles : Array) -> Vector2:
 	var dy3 : int = 3 * dy
 	# check for diagonals
 	if dx == 0 || dx == dy3:
-		return diagonal_los(p0, p1, (dx == 0), q13, tiles)
+		return _diagonal_los(p0, p1, (dx == 0), q13, tiles)
 	# angle is less than 45°
 	var flat : bool = dx > dy3
 	var x : int = int(p0.x)
@@ -242,14 +257,14 @@ func line_of_sight(p0 : Vector2, p1 : Vector2, tiles : Array) -> Vector2:
 		if los_blocked and not contact:
 			var prev : Tile = tiles[tiles.size() - 1]
 			var o : int = to_orientation(angle(prev, t))
-			ret = compute_contact(from.position, to.position, prev.position, o)
+			ret = _compute_contact(from.position, to.position, prev.position, o)
 			contact = true
 		tiles.append(t)
 		t.blocked = los_blocked
 		los_blocked = los_blocked or t.block_los(from, to, d, distance(p0, q))
 	return ret
 
-func diagonal_los(p0 : Vector2, p1 : Vector2, flat : bool, q13 : bool, tiles : Array) -> Vector2:
+func _diagonal_los(p0 : Vector2, p1 : Vector2, flat : bool, q13 : bool, tiles : Array) -> Vector2:
 	var dy : int = 1 if p1.y > p0.y else -1
 	var dx : int = 1 if p1.x > p0.x else -1
 	var x : int = int(p0.x)
@@ -300,16 +315,16 @@ func diagonal_los(p0 : Vector2, p1 : Vector2, flat : bool, q13 : bool, tiles : A
 		tiles.append(t)
 		t.blocked = los_blocked || blocked == 0x03
 		if t.blocked and not contact:
-			var o : int = compute_orientation(dx, dy, flat)
+			var o : int = _compute_orientation(dx, dy, flat)
 			if not los_blocked and blocked == 0x03:
-				ret = compute_contact(from.position, to.position, t.position, opposite(o))
+				ret = _compute_contact(from.position, to.position, t.position, opposite(o))
 			else:
-				ret = compute_contact(from.position, to.position, tiles[tiles.size() - idx].position, o)
+				ret = _compute_contact(from.position, to.position, tiles[tiles.size() - idx].position, o)
 			contact = true;
 		los_blocked = t.blocked || t.block_los(from, to, d, distance(p0, q))
 	return ret
 
-func compute_orientation(dx :int, dy :int, flat : bool) -> int:
+func _compute_orientation(dx :int, dy :int, flat : bool) -> int:
 	if flat:
 		if v: return Orientation.S if dy == 1 else Orientation.N
 		else: return Orientation.S if dx == 1 else Orientation.N
@@ -320,7 +335,7 @@ func compute_orientation(dx :int, dy :int, flat : bool) -> int:
 		if dy == 1: return Orientation.W if v else Orientation.S
 		else: return Orientation.W
 
-func compute_contact(from : Vector2, to : Vector2, t : Vector2, o : int) -> Vector2:
+func _compute_contact(from : Vector2, to : Vector2, t : Vector2, o : int) -> Vector2:
 	var dx : float = to.x - from.x
 	var dy : float = to.y - from.y
 	var n : float = float(IMAX) if dx == 0 else (dy / dx)
@@ -358,14 +373,16 @@ func compute_contact(from : Vector2, to : Vector2, t : Vector2, o : int) -> Vect
 			var x : float = (k - c) / (n - p)
 			return Vector2(x, n * x + c);
 
+# compute as an Array, the Tiles that can be reached by a given Piece from a Tile given by it's col;row coordinates
+# return the size of the built Array
 func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 	tiles.clear()
-	search_count += 1
-	from.acc = piece.get_mp()
-	from.parent = null
-	from.search_count = search_count
-	if from.acc <= 0 or not is_on_map(from.coords): return 0
+	if piece.get_mp() <= 0 or not is_on_map(from.coords): return 0
 	var road_march_bonus : int = piece.road_march_bonus()
+	search_count += 1
+	from.parent = null
+	from.acc = piece.get_mp()
+	from.search_count = search_count
 	from.road_march = road_march_bonus > 0
 	stack.push_back(from)
 	while(not stack.empty()):
@@ -381,7 +398,7 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 			var r : int = src.acc - cost
 			var rm : bool = src.road_march and src.has_road(o)
 			# not enough MP even with RM, maybe first move allowed
-			if ((r + (road_march_bonus if rm else 0)) < 0 and not (src == from and piece.at_least_one_tile())): continue
+			if ((r + (road_march_bonus if rm else 0)) < 0 and not (src == from and piece.at_least_one_tile(dst))): continue
 			if dst.search_count != search_count:
 				dst.search_count = search_count
 				dst.acc = r
@@ -396,14 +413,16 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 				stack.push_back(dst)
 	return tiles.size()
 
+# compute as an Array, the shortest path for a given Piece from a Tile to another given by there col;row coordinates
+# return the size of the built Array
 func shortest_path(piece : Piece, from : Tile,  to : Tile, tiles : Array) -> int:
 	tiles.clear()
+	if from == to or not is_on_map(from.coords) or not is_on_map(to.coords): return tiles.size()
+	var road_march_bonus : int = piece.road_march_bonus()
 	search_count += 1
 	from.acc = 0
 	from.parent = null
 	from.search_count = search_count
-	if from == to or not is_on_map(from.coords) or not is_on_map(to.coords): return tiles.size()
-	var road_march_bonus : int = piece.road_march_bonus()
 	from.road_march = road_march_bonus > 0
 	stack.push_back(from)
 	while(not stack.empty()):

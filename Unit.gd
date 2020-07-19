@@ -9,5 +9,5 @@ func get_mp() -> int:
 func road_march_bonus() -> int:
 	return 2
 
-func move_cost(src : Tile, dst : Tile, o : int) -> int:
-	return (1 if (src.has_road(o) and dst.type != 3) else dst.cost())
+func move_cost(src : Tile, dst : Tile, orientation : int) -> int:
+	return (1 if (src.has_road(orientation) and dst.type != 3) else dst.cost())
