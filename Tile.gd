@@ -35,21 +35,6 @@ func block_los(from : Tile, to : Tile, d : float, dt : float) -> bool:
 	print("Tile#block_los() must be overriden in a subclass")
 	return false
 
-# range value modifier when firing out of this tile with a given category of weapon
-func range_modifier(category : int) -> int:
-	print("Tile#range_modifier() must be overriden in a subclass")
-	return 0
-
-# attack value modifier when firing out of this tile with a given category of weapon with a given orientation
-func attack_modifier(category : int, orientation : int) -> int:
-	print("Tile#attack_modifier() must be overriden in a subclass")
-	return 0
-
-# defense value provided by this tile against a given category of weapon incoming from a given orientation
-func defense_value(category : int, orientation : int) -> int:
-	print("Tile#defense_value() must be overriden in a subclass")
-	return 0
-
 func enable_overlay(i :int, v : bool) -> void:
 	get_child(i).visible = v
 	if v: visible = true
