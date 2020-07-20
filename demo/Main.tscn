@@ -1,22 +1,22 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Camera.gd" type="Script" id=1]
-[ext_resource path="res://Map.gd" type="Script" id=2]
-[ext_resource path="res://Main.gd" type="Script" id=3]
-[ext_resource path="res://Los.gd" type="Script" id=4]
-[ext_resource path="res://assets/Anke.otf" type="DynamicFontData" id=5]
-[ext_resource path="res://assets/target.png" type="Texture" id=6]
-[ext_resource path="res://assets/tank.png" type="Texture" id=7]
+[ext_resource path="res://demo/Camera.gd" type="Script" id=1]
+[ext_resource path="res://assets/Anke.otf" type="DynamicFontData" id=2]
+[ext_resource path="res://assets/target.png" type="Texture" id=3]
+[ext_resource path="res://demo/Map.gd" type="Script" id=4]
+[ext_resource path="res://demo/Los.gd" type="Script" id=5]
+[ext_resource path="res://assets/tank.png" type="Texture" id=6]
+[ext_resource path="res://demo/Main.gd" type="Script" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 35
-font_data = ExtResource( 5 )
+font_data = ExtResource( 2 )
 
 [sub_resource type="Theme" id=2]
 default_font = SubResource( 1 )
 
 [node name="Main" type="Node2D"]
-script = ExtResource( 3 )
+script = ExtResource( 7 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -48,20 +48,20 @@ handle_input_locally = false
 render_target_update_mode = 3
 
 [node name="Map" type="Sprite" parent="CanvasLayer/HBOX/ViewportContainer/Viewport"]
-script = ExtResource( 2 )
+script = ExtResource( 4 )
 
 [node name="Hexes" type="Node" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
 
 [node name="Target" type="Sprite" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
 z_index = 1
-texture = ExtResource( 6 )
+texture = ExtResource( 3 )
 
 [node name="Tank" type="Sprite" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
 z_index = 1
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 
 [node name="Los" type="Node2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
-script = ExtResource( 4 )
+script = ExtResource( 5 )
 
 [node name="Camera" type="Camera2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport"]
 current = true

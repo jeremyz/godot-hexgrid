@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Tile",
 "class": "Hex",
 "language": "GDScript",
-"path": "res://Hex.gd"
+"path": "res://demo/Hex.gd"
 }, {
 "base": "Node",
 "class": "HexBoard",
@@ -32,7 +32,7 @@ _global_script_classes=[ {
 "base": "Piece",
 "class": "Unit",
 "language": "GDScript",
-"path": "res://Unit.gd"
+"path": "res://demo/Unit.gd"
 } ]
 _global_script_class_icons={
 "Hex": "res://godot/Tile.png",
@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="hexgrid_demo"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://demo/Main.tscn"
 config/icon="res://icon.png"
 
 [display]
