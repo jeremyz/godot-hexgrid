@@ -1,7 +1,7 @@
 #warning-ignore-all:integer_division
 extends Node
 
-class_name HexBoard, "res://godot/HexBoard.png"
+class_name HexBoard, "res://godot/HexMap.png"
 
 enum Orientation { E=1, NE=2, N=4, NW=8, W=16, SW=32, S=64, SE=128 }
 

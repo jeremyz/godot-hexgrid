@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "HexBoard",
 "language": "GDScript",
-"path": "res://HexBoard.gd"
+"path": "res://HexMap.gd"
 }, {
 "base": "Node2D",
 "class": "Piece",
@@ -36,7 +36,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Hex": "res://godot/Tile.png",
-"HexBoard": "res://godot/HexBoard.png",
+"HexBoard": "res://godot/HexMap.png",
 "Piece": "res://godot/Piece.png",
 "Tile": "res://godot/Tile.png",
 "Unit": "res://godot/Piece.png"
