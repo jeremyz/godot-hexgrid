@@ -5,7 +5,7 @@ class_name Tile, "res://godot/Tile.png"
 
 var coords : Vector2
 var blocked : bool
-var on_board : bool = false
+var on_map : bool = false
 
 var acc : int
 var f : float
@@ -16,7 +16,7 @@ var search_count : int
 func configure(p : Vector2, c: Vector2, o :Array) -> void:
 	position = p
 	coords = c
-	on_board = true
+	on_map = true
 	for t in o:
 		var s :Sprite = Sprite.new()
 		s.texture = load(t)

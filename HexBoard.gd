@@ -316,7 +316,7 @@ func _diagonal_los(p0 : Vector2, p1 : Vector2, flat : bool, q13 : bool, tiles : 
 		else: x += dx		# right
 		var q : Vector2 = Vector2(x, y)
 		var t : Tile = get_tile(q)
-		if t.on_board:
+		if t.on_map:
 			tiles.append(t)
 			t.blocked = los_blocked
 			if t.block_los(from, to, d, distance(p0, q)):
@@ -331,7 +331,7 @@ func _diagonal_los(p0 : Vector2, p1 : Vector2, flat : bool, q13 : bool, tiles : 
 			if not q13: x -= dx
 		q = Vector2(x, y)
 		t = get_tile(q)
-		if t.on_board:
+		if t.on_map:
 			tiles.append(t)
 			t.blocked = los_blocked
 			if t.block_los(from, to, d, distance(p0, q)):
@@ -423,7 +423,7 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 		# warning-ignore:return_value_discarded
 		build_adjacents(src.coords)
 		for dst in adjacents:
-			if not dst.on_board: continue
+			if not dst.on_map: continue
 			var o : int = to_orientation(angle(src, dst))
 			var cost : int = piece.move_cost(src, dst, o)
 			if (cost == -1): continue # impracticable
@@ -463,7 +463,7 @@ func shortest_path(piece : Piece, from : Tile,  to : Tile, tiles : Array) -> int
 		# warning-ignore:return_value_discarded
 		build_adjacents(src.coords)
 		for dst in adjacents:
-			if not dst.on_board: continue
+			if not dst.on_map: continue
 			var o : int = to_orientation(angle(src, dst))
 			var cost : int = piece.move_cost(src, dst, o)
 			if (cost == -1): continue # impracticable
@@ -512,7 +512,7 @@ func range_of_influence(piece : Piece, from : Tile, category : int, tiles : Arra
 		# warning-ignore:return_value_discarded
 		build_adjacents(src.coords)
 		for dst in adjacents:
-			if not dst.on_board: continue
+			if not dst.on_map: continue
 			if dst.search_count == search_count: continue
 			dst.search_count = search_count
 			var d : int = int(distance(from.coords, dst.coords, false))
