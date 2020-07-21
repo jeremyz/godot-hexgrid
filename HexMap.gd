@@ -137,7 +137,12 @@ func _key(x : int, y : int) -> int:
 	return i
 
 # build the 6 adjacent Tiles of a Tile given by it's col;row coordinates
-func build_adjacents(coords : Vector2) -> Array:
+func adjacents_of(tile : Tile, tiles : Array) -> void:
+	_build_adjacents(tile.coords)
+	tiles.clear()
+	for t in adjacents: tiles.append(t)
+
+func _build_adjacents(coords : Vector2) -> Array:
 	adjacents.clear()
 	coords.x += 1
 	adjacents.append(get_tile(coords))
@@ -422,7 +427,7 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 		var src : Tile = stack.pop_back()
 		if (src.acc + (road_march_bonus if src.road_march else 0)) <= 0: continue
 		# warning-ignore:return_value_discarded
-		build_adjacents(src.coords)
+		_build_adjacents(src.coords)
 		for dst in adjacents:
 			if not dst.on_map: continue
 			var o : int = to_orientation(angle(src, dst))
@@ -462,7 +467,7 @@ func shortest_path(piece : Piece, from : Tile,  to : Tile, tiles : Array) -> int
 		var src : Tile = stack.pop_back()
 		if (src == to): break
 		# warning-ignore:return_value_discarded
-		build_adjacents(src.coords)
+		_build_adjacents(src.coords)
 		for dst in adjacents:
 			if not dst.on_map: continue
 			var o : int = to_orientation(angle(src, dst))
@@ -511,7 +516,7 @@ func range_of_influence(piece : Piece, from : Tile, category : int, tiles : Arra
 	while(not stack.empty()):
 		var src : Tile = stack.pop_back()
 		# warning-ignore:return_value_discarded
-		build_adjacents(src.coords)
+		_build_adjacents(src.coords)
 		for dst in adjacents:
 			if not dst.on_map: continue
 			if dst.search_count == search_count: continue
