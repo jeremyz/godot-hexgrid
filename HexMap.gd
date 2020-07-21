@@ -138,9 +138,8 @@ func _key(x : int, y : int) -> int:
 
 # build the 6 adjacent Tiles of a Tile given by it's col;row coordinates
 func adjacents_of(tile : Tile, tiles : Array) -> void:
-	_build_adjacents(tile.coords)
 	tiles.clear()
-	for t in adjacents: tiles.append(t)
+	for t in _build_adjacents(tile.coords): tiles.append(t)
 
 func _build_adjacents(coords : Vector2) -> Array:
 	adjacents.clear()
