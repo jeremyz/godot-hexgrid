@@ -28,7 +28,8 @@ var adjacents : Array
 var search_count : int
 var stack : Array
 
-func configure(cols : int, rows : int, side : float, v0 : Vector2, vertical : bool) -> void:
+func _init(cols : int, rows : int, side : float, v0 : Vector2, vertical : bool, fct : FuncRef) -> void:
+	tile_factory_fct = fct
 	v = vertical
 	s = side
 	w  = s * 1.73205

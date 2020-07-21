@@ -34,9 +34,6 @@ var show_influence : bool
 func _ready():
 	drag = null
 	unit = Unit.new()
-	board = HexBoard.new()
-	board.tile_factory_fct = funcref(self, "get_tile")
-	board.v = false
 	rotate_map()
 
 func reset() -> void:
@@ -56,7 +53,7 @@ func reset() -> void:
 	compute()
 
 func rotate_map() -> void:
-	texture = load(MAPH if board.v else MAPV)
+	texture = load(MAPH if is_instance_valid(board) and board.v else MAPV)
 	configure()
 	reset()
 
@@ -67,20 +64,21 @@ func set_mode(l : bool, m : bool, i : bool) -> void:
 	compute()
 
 func configure() -> void:
+	var v : bool = (is_instance_valid(board) and board.v)
 	var v0 : Vector2 = Vector2(50, 100)
 	if centered:
 		var ts : Vector2 = texture.get_size()
-		if board.v:	
+		if v:
 			v0.x -= ts.y / 2
 			v0.y -= ts.x / 2
 		else:
 			v0 -= ts / 2
-	if board.v:
+	if v:
 		hex_rotation = 30
-		board.configure(10, 4, 100, v0, false)
+		board = HexBoard.new(10, 4, 100, v0, false, funcref(self, "get_tile"))
 	else:
 		hex_rotation = 0
-		board.configure(10, 7, 100, v0, true)
+		board = HexBoard.new(10, 7, 100, v0, true, funcref(self, "get_tile"))
 
 func texture_size() -> Vector2:
 	return texture.get_size()
