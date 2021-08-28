@@ -1,7 +1,7 @@
 #warning-ignore-all:unused_argument
 extends Node2D
 
-class_name Piece, "res://godot/Piece.png"
+class_name Piece, "res://addons/hexgrid/Piece.png"
 
 # movement points
 func get_mp() -> int:

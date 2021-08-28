@@ -17,17 +17,17 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "HexBoard",
 "language": "GDScript",
-"path": "res://HexMap.gd"
+"path": "res://addons/hexgrid/HexMap.gd"
 }, {
 "base": "Node2D",
 "class": "Piece",
 "language": "GDScript",
-"path": "res://Piece.gd"
+"path": "res://addons/hexgrid/Piece.gd"
 }, {
 "base": "Node2D",
 "class": "Tile",
 "language": "GDScript",
-"path": "res://Tile.gd"
+"path": "res://addons/hexgrid/Tile.gd"
 }, {
 "base": "Piece",
 "class": "Unit",
@@ -35,11 +35,11 @@ _global_script_classes=[ {
 "path": "res://demo/Unit.gd"
 } ]
 _global_script_class_icons={
-"Hex": "res://godot/Tile.png",
-"HexBoard": "res://godot/HexMap.png",
-"Piece": "res://godot/Piece.png",
-"Tile": "res://godot/Tile.png",
-"Unit": "res://godot/Piece.png"
+"Hex": "res://addons/hexgrid/Tile.png",
+"HexBoard": "",
+"Piece": "",
+"Tile": "",
+"Unit": "res://addons/hexgrid/Piece.png"
 }
 
 [application]

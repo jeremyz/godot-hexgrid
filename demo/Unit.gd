@@ -1,7 +1,7 @@
 #warning-ignore-all:unused_argument
 extends Piece
 
-class_name Unit, "res://godot/Piece.png"
+class_name Unit, "res://addons/hexgrid/Piece.png"
 
 func get_mp() -> int:
 	return 2

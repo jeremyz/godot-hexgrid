@@ -1,7 +1,7 @@
 #warning-ignore-all:unused_argument
 extends Node2D
 
-class_name Tile, "res://godot/Tile.png"
+class_name Tile, "res://addons/hexgrid/Tile.png"
 
 var coords : Vector2
 var blocked : bool

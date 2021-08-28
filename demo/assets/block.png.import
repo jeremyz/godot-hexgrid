@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/HexMap.png-021fe668dbb17ad9c306310ffe1cd0f0.stex"
+path="res://.import/block.png-7b666470ec7d1ed55123323983805a34.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://godot/HexMap.png"
-dest_files=[ "res://.import/HexMap.png-021fe668dbb17ad9c306310ffe1cd0f0.stex" ]
+source_file="res://demo/assets/block.png"
+dest_files=[ "res://.import/block.png-7b666470ec7d1ed55123323983805a34.stex" ]
 
 [params]
 

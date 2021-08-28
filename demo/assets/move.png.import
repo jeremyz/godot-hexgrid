@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Tile.png-4e4b98625182aa9b1a6a23fb8ef3a29d.stex"
+path="res://.import/move.png-cbedb7692b73fcaf2a6f182fb2ab302a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://godot/Tile.png"
-dest_files=[ "res://.import/Tile.png-4e4b98625182aa9b1a6a23fb8ef3a29d.stex" ]
+source_file="res://demo/assets/move.png"
+dest_files=[ "res://.import/move.png-cbedb7692b73fcaf2a6f182fb2ab302a.stex" ]
 
 [params]
 

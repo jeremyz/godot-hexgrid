@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Piece.png-0617c788b12591c5bfc6b47da73ecbe2.stex"
+path="res://.import/city.png-b5e144e6bc7635251820830d2b6c5a50.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://godot/Piece.png"
-dest_files=[ "res://.import/Piece.png-0617c788b12591c5bfc6b47da73ecbe2.stex" ]
+source_file="res://demo/assets/city.png"
+dest_files=[ "res://.import/city.png-b5e144e6bc7635251820830d2b6c5a50.stex" ]
 
 [params]
 

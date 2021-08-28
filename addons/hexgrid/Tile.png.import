@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/short.png-6337ed76204123df33053be0499ad3de.stex"
+path="res://.import/Tile.png-c201d199cb1cc344924999eb46a6ca7d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/short.png"
-dest_files=[ "res://.import/short.png-6337ed76204123df33053be0499ad3de.stex" ]
+source_file="res://addons/hexgrid/Tile.png"
+dest_files=[ "res://.import/Tile.png-c201d199cb1cc344924999eb46a6ca7d.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/city.png-02b383d5b5b6aa591b88e70ba700cd66.stex"
+path="res://.import/Piece.png-5155cac4a0bf7c2a889be85d756a935e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/city.png"
-dest_files=[ "res://.import/city.png-02b383d5b5b6aa591b88e70ba700cd66.stex" ]
+source_file="res://addons/hexgrid/Piece.png"
+dest_files=[ "res://.import/Piece.png-5155cac4a0bf7c2a889be85d756a935e.stex" ]
 
 [params]
 
@@ -28,6 +28,7 @@ process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
+process/normal_map_invert_y=false
 stream=false
 size_limit=0
 detect_3d=true

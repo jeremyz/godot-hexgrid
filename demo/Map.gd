@@ -2,17 +2,17 @@ extends Sprite
 
 signal hex_touched(pos, hex, key)
 
-const MAPH : String = "res://assets/map-h.png"
-const MAPV : String = "res://assets/map-v.png"
-const BLOCK : String = "res://assets/block.png"
-const BLACK : String = "res://assets/black.png"
-const MOVE : String = "res://assets/move.png"
-const SHORT : String = "res://assets/short.png"
-const RED : String = "res://assets/red.png"
-const GREEN : String = "res://assets/green.png"
-const TREE : String = "res://assets/tree.png"
-const CITY : String = "res://assets/city.png"
-const MOUNT : String = "res://assets/mountain.png"
+const MAPH : String = "res://demo/assets/map-h.png"
+const MAPV : String = "res://demo/assets/map-v.png"
+const BLOCK : String = "res://demo/assets/block.png"
+const BLACK : String = "res://demo/assets/black.png"
+const MOVE : String = "res://demo/assets/move.png"
+const SHORT : String = "res://demo/assets/short.png"
+const RED : String = "res://demo/assets/red.png"
+const GREEN : String = "res://demo/assets/green.png"
+const TREE : String = "res://demo/assets/tree.png"
+const CITY : String = "res://demo/assets/city.png"
+const MOUNT : String = "res://demo/assets/mountain.png"
 
 var drag : Sprite
 

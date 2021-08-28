@@ -1,7 +1,7 @@
 #warning-ignore-all:unused_argument
 extends Tile
 
-class_name Hex, "res://godot/Tile.png"
+class_name Hex, "res://addons/hexgrid/Tile.png"
 
 var type : int = -1
 var roads : int = 0

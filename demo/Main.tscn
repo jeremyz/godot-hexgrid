@@ -1,11 +1,11 @@
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://demo/Camera.gd" type="Script" id=1]
-[ext_resource path="res://assets/Anke.otf" type="DynamicFontData" id=2]
-[ext_resource path="res://assets/target.png" type="Texture" id=3]
+[ext_resource path="res://demo/assets/Anke.otf" type="DynamicFontData" id=2]
+[ext_resource path="res://demo/assets/target.png" type="Texture" id=3]
 [ext_resource path="res://demo/Map.gd" type="Script" id=4]
 [ext_resource path="res://demo/Los.gd" type="Script" id=5]
-[ext_resource path="res://assets/tank.png" type="Texture" id=6]
+[ext_resource path="res://demo/assets/tank.png" type="Texture" id=6]
 [ext_resource path="res://demo/Main.gd" type="Script" id=7]
 
 [sub_resource type="DynamicFont" id=1]
