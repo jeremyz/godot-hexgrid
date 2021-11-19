@@ -1,7 +1,7 @@
 #warning-ignore-all:integer_division
 extends Node
 
-class_name HexBoard, "res://addons/hexgrid/HexMap.png"
+class_name HexMap, "res://addons/hexgrid/HexMap.png"
 
 enum Orientation { E=1, NE=2, N=4, NW=8, W=16, SW=32, S=64, SE=128 }
 

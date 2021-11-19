@@ -16,7 +16,7 @@ const MOUNT : String = "res://demo/assets/mountain.png"
 
 var drag : Sprite
 
-var board : HexBoard
+var board : HexMap
 var prev : Vector2
 var hexes : Dictionary
 var hex_rotation : int
@@ -75,10 +75,10 @@ func configure() -> void:
 			v0 -= ts / 2
 	if v:
 		hex_rotation = 30
-		board = HexBoard.new(10, 4, 100, v0, false, funcref(self, "get_tile"))
+		board = HexMap.new(10, 4, 100, v0, false, funcref(self, "get_tile"))
 	else:
 		hex_rotation = 0
-		board = HexBoard.new(10, 7, 100, v0, true, funcref(self, "get_tile"))
+		board = HexMap.new(10, 7, 100, v0, true, funcref(self, "get_tile"))
 
 func texture_size() -> Vector2:
 	return texture.get_size()
@@ -137,12 +137,12 @@ func get_tile(coords : Vector2, k : int) -> Tile:
 func get_road(k : int) -> int:
 	if not board.v: return 0
 	var v : int = 0
-	v += (HexBoard.Orientation.E if k in [19,20,21,23,24,42,43,44,45,46,47] else 0)
-	v += (HexBoard.Orientation.W if k in [19,20,21,22,24,25,43,44,45,46,47] else 0)
-	v += (HexBoard.Orientation.SE if k in [22,32,42,52,62] else 0)
-	v += (HexBoard.Orientation.NW if k in [32,42,52,62] else 0)
-	v += (HexBoard.Orientation.NE if k in [7,16,25,32] else 0)
-	v += (HexBoard.Orientation.SW if k in [7,16,23] else 0)
+	v += (HexMap.Orientation.E if k in [19,20,21,23,24,42,43,44,45,46,47] else 0)
+	v += (HexMap.Orientation.W if k in [19,20,21,22,24,25,43,44,45,46,47] else 0)
+	v += (HexMap.Orientation.SE if k in [22,32,42,52,62] else 0)
+	v += (HexMap.Orientation.NW if k in [32,42,52,62] else 0)
+	v += (HexMap.Orientation.NE if k in [7,16,25,32] else 0)
+	v += (HexMap.Orientation.SW if k in [7,16,23] else 0)
 	return v
 
 func notify(pos : Vector2, coords : Vector2) -> void:
