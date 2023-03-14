@@ -18,4 +18,4 @@ func setup(v0 :Vector2, v1 : Vector2, v2 : Vector2) -> void:
 	p0 = v0
 	p1 = v1
 	p2 = v2
-	update()
+	queue_redraw()

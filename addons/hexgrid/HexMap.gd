@@ -1,7 +1,7 @@
-#warning-ignore-all:integer_division
+@icon('res://addons/hexgrid/HexMap.png')
 extends Node
 
-class_name HexMap, "res://addons/hexgrid/HexMap.png"
+class_name HexMap
 
 enum Orientation { E=1, NE=2, N=4, NW=8, W=16, SW=32, S=64, SE=128 }
 
@@ -22,13 +22,13 @@ var m : float		# dh / dw
 var im : float		# dw / dh
 var tl : int		# num of hexes in 2 consecutives rows
 
-var tile_factory_fct : FuncRef
+var tile_factory_fct : Callable
 var angles : Dictionary
 var adjacents : Array
 var search_count : int
 var stack : Array
 
-func _init(cols : int, rows : int, side : float, v0 : Vector2, vertical : bool, fct : FuncRef) -> void:
+func _init(cols : int, rows : int, side : float, v0 : Vector2, vertical : bool, fct : Callable) -> void:
 	tile_factory_fct = fct
 	v = vertical
 	s = side
@@ -69,7 +69,7 @@ func size() -> int:
 
 # fetch a Tile given it's col;row coordinates
 func get_tile(coords : Vector2) -> Tile:
-	return tile_factory_fct.call_func(coords, key(coords))
+	return tile_factory_fct.call(coords, key(coords))
 
 # Orientation to degrees
 func to_degrees(o : int) -> int:
@@ -84,7 +84,7 @@ func to_orientation(a : float) -> int:
 
 # compute the angle between 2 adjacent Tiles
 func angle(from : Tile, to : Tile) -> int:
-	var a : float = rad2deg((to.position - from.position).angle()) + DEGREE_ADJ
+	var a : float = rad_to_deg((to.position - from.position).angle()) + DEGREE_ADJ
 	if a < 0: a += 360
 	return int(a / 10) * 10
 
@@ -96,7 +96,7 @@ func opposite(o : int) -> int:
 # return the Orientation given to distant Tiles
 # Orientation is combined in case of diagonals
 func distant_orientation(from : Tile, to : Tile) -> int:
-	var a : float = rad2deg((to.position - from.position).angle())
+	var a : float = rad_to_deg((to.position - from.position).angle())
 	if a < 0: a += 360
 	a = int(a * 10) / 10.0
 	for k in angles.keys():
@@ -422,7 +422,7 @@ func possible_moves(piece : Piece, from : Tile, tiles : Array) -> int:
 	from.search_count = search_count
 	from.road_march = road_march_bonus > 0
 	stack.push_back(from)
-	while(not stack.empty()):
+	while(not stack.is_empty()):
 		var src : Tile = stack.pop_back()
 		if (src.acc + (road_march_bonus if src.road_march else 0)) <= 0: continue
 		# warning-ignore:return_value_discarded
@@ -462,7 +462,7 @@ func shortest_path(piece : Piece, from : Tile,  to : Tile, tiles : Array) -> int
 	from.search_count = search_count
 	from.road_march = road_march_bonus > 0
 	stack.push_back(from)
-	while(not stack.empty()):
+	while(not stack.is_empty()):
 		var src : Tile = stack.pop_back()
 		if (src == to): break
 		# warning-ignore:return_value_discarded
@@ -512,7 +512,7 @@ func range_of_influence(piece : Piece, from : Tile, category : int, tiles : Arra
 	search_count += 1
 	from.search_count = search_count
 	stack.push_back(from)
-	while(not stack.empty()):
+	while(not stack.is_empty()):
 		var src : Tile = stack.pop_back()
 		# warning-ignore:return_value_discarded
 		_build_adjacents(src.coords)

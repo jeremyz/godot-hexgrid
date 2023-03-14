@@ -1,155 +1,105 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=10 format=3 uid="uid://dgsk1t6e4qqle"]
 
-[ext_resource path="res://demo/Camera.gd" type="Script" id=1]
-[ext_resource path="res://demo/assets/Anke.otf" type="DynamicFontData" id=2]
-[ext_resource path="res://demo/assets/target.png" type="Texture" id=3]
-[ext_resource path="res://demo/Map.gd" type="Script" id=4]
-[ext_resource path="res://demo/Los.gd" type="Script" id=5]
-[ext_resource path="res://demo/assets/tank.png" type="Texture" id=6]
-[ext_resource path="res://demo/Main.gd" type="Script" id=7]
+[ext_resource type="Script" path="res://demo/Camera.gd" id="1"]
+[ext_resource type="FontFile" uid="uid://dvfypd4r23idc" path="res://demo/assets/Anke.otf" id="2"]
+[ext_resource type="Texture2D" uid="uid://dkf0ahw2k36lf" path="res://demo/assets/target.png" id="3"]
+[ext_resource type="Script" path="res://demo/Map.gd" id="4"]
+[ext_resource type="Script" path="res://demo/Los.gd" id="5"]
+[ext_resource type="Texture2D" uid="uid://bs86mgcu1rf0c" path="res://demo/assets/tank.png" id="6"]
+[ext_resource type="Script" path="res://demo/Main.gd" id="7"]
 
-[sub_resource type="DynamicFont" id=1]
-size = 35
-font_data = ExtResource( 2 )
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("2")])
+face_index = null
+embolden = null
+transform = null
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
 
-[sub_resource type="Theme" id=2]
-default_font = SubResource( 1 )
+[sub_resource type="Theme" id="2"]
+default_font = SubResource("1")
 
 [node name="Main" type="Node2D"]
-script = ExtResource( 7 )
+script = ExtResource("7")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HBOX" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
+mouse_filter = 2
 
-[node name="ViewportContainer" type="ViewportContainer" parent="CanvasLayer/HBOX"]
-margin_right = 1666.0
-margin_bottom = 1080.0
-rect_min_size = Vector2( 100, 100 )
-mouse_filter = 2
+[node name="ViewportContainer" type="SubViewportContainer" parent="CanvasLayer/HBOX"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+mouse_filter = 2
 stretch = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Viewport" type="Viewport" parent="CanvasLayer/HBOX/ViewportContainer"]
-size = Vector2( 1666, 1080 )
+[node name="Viewport" type="SubViewport" parent="CanvasLayer/HBOX/ViewportContainer"]
 handle_input_locally = false
-render_target_update_mode = 3
+size = Vector2i(1056, 648)
+render_target_update_mode = 4
 
-[node name="Map" type="Sprite" parent="CanvasLayer/HBOX/ViewportContainer/Viewport"]
-script = ExtResource( 4 )
+[node name="Map" type="Sprite2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport"]
+script = ExtResource("4")
 
 [node name="Hexes" type="Node" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
 
-[node name="Target" type="Sprite" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
+[node name="Target" type="Sprite2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
 z_index = 1
-texture = ExtResource( 3 )
+texture = ExtResource("3")
 
-[node name="Tank" type="Sprite" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
+[node name="Tank" type="Sprite2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
 z_index = 1
-texture = ExtResource( 6 )
+texture = ExtResource("6")
 
 [node name="Los" type="Node2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport/Map"]
-script = ExtResource( 5 )
+script = ExtResource("5")
 
 [node name="Camera" type="Camera2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport"]
-current = true
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="UI" type="VBoxContainer" parent="CanvasLayer/HBOX"]
-margin_left = 1670.0
-margin_right = 1920.0
-margin_bottom = 1080.0
-rect_min_size = Vector2( 250, 0 )
-theme = SubResource( 2 )
-custom_constants/separation = 30
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
+theme = SubResource("2")
 
 [node name="rotate" type="Button" parent="CanvasLayer/HBOX/UI"]
-margin_right = 250.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 0, 100 )
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Rotate"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="zin" type="Button" parent="CanvasLayer/HBOX/UI"]
-margin_top = 130.0
-margin_right = 250.0
-margin_bottom = 230.0
-rect_min_size = Vector2( 0, 100 )
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Z IN"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="zout" type="Button" parent="CanvasLayer/HBOX/UI"]
-margin_top = 260.0
-margin_right = 250.0
-margin_bottom = 360.0
-rect_min_size = Vector2( 0, 100 )
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Z OUT"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="LOS" type="CheckBox" parent="CanvasLayer/HBOX/UI"]
-margin_top = 390.0
-margin_right = 250.0
-margin_bottom = 434.0
-pressed = true
+layout_mode = 2
 text = "LOS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Move" type="CheckBox" parent="CanvasLayer/HBOX/UI"]
-margin_top = 464.0
-margin_right = 250.0
-margin_bottom = 508.0
+layout_mode = 2
 text = "Move"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Influence" type="CheckBox" parent="CanvasLayer/HBOX/UI"]
-margin_top = 538.0
-margin_right = 250.0
-margin_bottom = 582.0
+layout_mode = 2
 text = "Influence"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Info" type="Label" parent="CanvasLayer/HBOX/UI"]
-margin_top = 612.0
-margin_right = 250.0
-margin_bottom = 648.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
 
 [node name="OSInfo" type="Label" parent="CanvasLayer/HBOX/UI"]
-margin_top = 678.0
-margin_right = 250.0
-margin_bottom = 714.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2

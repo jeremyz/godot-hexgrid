@@ -1,7 +1,7 @@
-#warning-ignore-all:unused_argument
+@icon('res://addons/hexgrid/Piece.png')
 extends Piece
 
-class_name Unit, "res://addons/hexgrid/Piece.png"
+class_name Unit
 
 func get_mp() -> int:
 	return 2

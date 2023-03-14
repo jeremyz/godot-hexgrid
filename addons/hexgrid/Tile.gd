@@ -1,7 +1,7 @@
-#warning-ignore-all:unused_argument
+@icon('res://addons/hexgrid/Tile.png')
 extends Node2D
 
-class_name Tile, "res://addons/hexgrid/Tile.png"
+class_name Tile
 
 var coords : Vector2
 var blocked : bool
@@ -18,7 +18,7 @@ func configure(p : Vector2, c: Vector2, o :Array) -> void:
 	coords = c
 	on_map = true
 	for t in o:
-		var s :Sprite = Sprite.new()
+		var s :Sprite2D = Sprite2D.new()
 		s.texture = load(t)
 		s.visible = false
 		add_child(s)

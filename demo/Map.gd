@@ -1,4 +1,4 @@
-extends Sprite
+extends Sprite2D
 
 signal hex_touched(pos, hex, key)
 
@@ -14,7 +14,7 @@ const TREE : String = "res://demo/assets/tree.png"
 const CITY : String = "res://demo/assets/city.png"
 const MOUNT : String = "res://demo/assets/mountain.png"
 
-var drag : Sprite
+var drag : Sprite2D
 
 var board : HexMap
 var prev : Vector2
@@ -75,10 +75,10 @@ func configure() -> void:
 			v0 -= ts / 2
 	if v:
 		hex_rotation = 30
-		board = HexMap.new(10, 4, 100, v0, false, funcref(self, "get_tile"))
+		board = HexMap.new(10, 4, 100, v0, false, get_tile)
 	else:
 		hex_rotation = 0
-		board = HexMap.new(10, 7, 100, v0, true, funcref(self, "get_tile"))
+		board = HexMap.new(10, 7, 100, v0, true, get_tile)
 
 func texture_size() -> Vector2:
 	return texture.get_size()

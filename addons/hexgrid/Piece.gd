@@ -1,7 +1,7 @@
-#warning-ignore-all:unused_argument
+@icon('res://addons/hexgrid/Piece.png')
 extends Node2D
 
-class_name Piece, "res://addons/hexgrid/Piece.png"
+class_name Piece
 
 # movement points
 func get_mp() -> int:

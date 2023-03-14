@@ -6,49 +6,18 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "Tile",
-"class": "Hex",
-"language": "GDScript",
-"path": "res://demo/Hex.gd"
-}, {
-"base": "Node",
-"class": "HexMap",
-"language": "GDScript",
-"path": "res://addons/hexgrid/HexMap.gd"
-}, {
-"base": "Node2D",
-"class": "Piece",
-"language": "GDScript",
-"path": "res://addons/hexgrid/Piece.gd"
-}, {
-"base": "Node2D",
-"class": "Tile",
-"language": "GDScript",
-"path": "res://addons/hexgrid/Tile.gd"
-}, {
-"base": "Piece",
-"class": "Unit",
-"language": "GDScript",
-"path": "res://demo/Unit.gd"
-} ]
-_global_script_class_icons={
-"Hex": "res://addons/hexgrid/Tile.png",
-"HexMap": "res://addons/hexgrid/HexMap.png",
-"Piece": "res://addons/hexgrid/Piece.png",
-"Tile": "res://addons/hexgrid/Tile.png",
-"Unit": "res://addons/hexgrid/Piece.png"
-}
+config_version=5
 
 [application]
 
 config/name="Godot Hexgrid"
 run/main_scene="res://demo/Main.tscn"
+config/features=PackedStringArray("4.1")
 config/icon="res://icon.png"
 
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1024
 window/size/width=1920
 window/size/height=1080

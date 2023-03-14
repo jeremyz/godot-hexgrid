@@ -1,7 +1,7 @@
-#warning-ignore-all:unused_argument
+@icon('res://addons/hexgrid/Tile.png')
 extends Tile
 
-class_name Hex, "res://addons/hexgrid/Tile.png"
+class_name Hex
 
 var type : int = -1
 var roads : int = 0
@@ -40,12 +40,15 @@ func elevation() -> int:
 	if type == 2: return 3
 	return 0
 
+@warning_ignore("unused_parameter")
 func range_modifier(category : int) -> int:
 	return (1 if type == 2 else 0)
 
+@warning_ignore("unused_parameter")
 func attack_modifier(category : int, orientation : int) -> int:
 	return (2 if type == 1 else 0)
 
+@warning_ignore("unused_parameter")
 func defense_value(category : int, orientation : int) -> int:
 	if type == 0: return 2
 	elif type == 1: return 1
@@ -75,6 +78,6 @@ func show_short(b) -> void:
 	enable_overlay(8, b)
 
 func show_influence(b) -> void:
-	var s : Sprite = get_child(0)
+	var s : Sprite2D = get_child(0)
 	s.modulate = Color(f/10.0, 0, 0)
 	enable_overlay(0, b)
