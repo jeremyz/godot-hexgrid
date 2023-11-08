@@ -1,6 +1,5 @@
 extends Node2D
 
-var moved : int = 0
 var drag_map : bool = false
 
 @onready var UI : Control = $CanvasLayer/HBOX/UI
@@ -22,6 +21,7 @@ func _ready():
 	UI.get_node("OSInfo").text = "screen\n%s\ndpi %d" % [DisplayServer.screen_get_size(), DisplayServer.screen_get_dpi()]
 
 func on_viewport_resized() -> void:
+	print("Main->on_viewport_resized : %s" % $CanvasLayer/HBOX/ViewportContainer/Viewport.size)
 	Camera.configure($CanvasLayer/HBOX/ViewportContainer/Viewport.size, Map.center(), Map.texture_size())
 
 func on_rotate() -> void:
@@ -43,22 +43,17 @@ func _unhandled_input(event : InputEvent) -> void:
 		if drag_map:
 			var dv : Vector2 = event.relative * Camera.zoom
 			Camera.update_camera(-dv.x, -dv.y, 0)
-			moved += 1
 		else:
 			Map.on_mouse_move()
 	elif event is InputEventMouseButton:
 		if event.button_index == 1:
-			if moved < 5:
-				drag_map = Map.on_click(event.pressed)
-			else:
-				drag_map = false
-			moved = 0
-		elif event.button_index == 3:
+			Map.on_click(event.pressed)
+		elif event.button_index == 2:
 			drag_map = event.pressed
 		elif event.button_index == 4:
 			on_zoom(true)
 		elif event.button_index == 5:
 			on_zoom(false)
 	elif event is InputEventKey:
-		if event.scancode == KEY_ESCAPE:
+		if event.keycode == KEY_ESCAPE:
 			get_tree().quit()
