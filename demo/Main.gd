@@ -29,7 +29,7 @@ func on_rotate() -> void:
 	on_viewport_resized()
 
 func on_zoom(b : bool) -> void:
-	Camera.update_camera(0, 0, -0.05 if b else 0.05)
+	Camera.update_camera(0, 0, 0.05 if b else -0.05)
 
 func on_toggle() -> void:
 	Map.set_mode(UI.get_node("LOS").is_pressed(), UI.get_node("Move").is_pressed(), UI.get_node("Influence").is_pressed())
