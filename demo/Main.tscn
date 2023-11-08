@@ -10,9 +10,6 @@
 
 [sub_resource type="FontFile" id="1"]
 fallbacks = Array[Font]([ExtResource("2")])
-face_index = null
-embolden = null
-transform = null
 cache/0/16/0/ascent = 0.0
 cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
@@ -45,7 +42,7 @@ stretch = true
 
 [node name="Viewport" type="SubViewport" parent="CanvasLayer/HBOX/ViewportContainer"]
 handle_input_locally = false
-size = Vector2i(1056, 648)
+size = Vector2i(1824, 1024)
 render_target_update_mode = 4
 
 [node name="Map" type="Sprite2D" parent="CanvasLayer/HBOX/ViewportContainer/Viewport"]
